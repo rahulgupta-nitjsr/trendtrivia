@@ -1,0 +1,112 @@
+# **TrendTrivia - Coding Standards & Development Guidelines**
+
+Version: 2.0  
+Last Updated: June 27, 2024
+
+This document outlines the official standards and best practices for all development within the TrendTrivia project. Adherence to these guidelines is mandatory to ensure the codebase is modular, readable, robust, and secure.
+
+## **1. Core Philosophy**
+
+These are the five foundational rules that guide every decision.
+
+1.  **Modularity Over Monoliths:** We will always favor breaking down features into small, reusable components and functions. Each file must have a single, clear purpose. This prevents "god files" that are hard to read, test, and maintain.
+2.  **Clarity Through Comments:** Code should be accompanied by clear comments that explain the "why" behind the logic, not just the "what." This is crucial for complex business rules, non-obvious workarounds, or important decisions.
+3.  **Iterative & Simple Development:** We will make changes in small, logical, and reviewable steps. We will always aim for the simplest, most robust solution that meets the requirements, avoiding premature optimization or unnecessary complexity.
+4.  **Security First:** The application's security is paramount. API keys, secrets, or any sensitive information must **never** be exposed on the frontend. All sensitive operations must be handled by a secure backend service.
+5.  **Robustness and Error Handling:** The application must be reliable. This means anticipating potential issues and handling errors gracefully (e.g., what happens if an API call fails?).
+6.  **Living Documentation:** The project's documentation is as important as the code. The `progress.md` and `architecture.md` files must be updated continuously to reflect the current state of the project.
+
+## **2. File & Folder Structure**
+
+To enforce modularity, we will follow a strict directory structure.
+
+*   **`src/components/`**: This is where all reusable React components will live. Each component will be in its own PascalCase folder (e.g., `src/components/QuizButton/`).
+*   **`src/pages/`**: These are the top-level components for each page or view of the application (e.g., `HomePage`, `QuizPage`).
+*   **`src/hooks/`**: For custom, reusable React Hooks (e.g., `useQuizState`).
+*   **`src/services/`**: For functions that handle communication with external APIs. For MVP1, this will be minimal, but the structure will be in place.
+*   **`src/styles/`**: Global styles, theme definitions, and CSS variable declarations will live here.
+*   **`src/utils/`**: For small, pure helper functions that can be used across the application (e.g., a function to format a score).
+*   **`public/`**: For all static assets, including images, fonts, and the initial `quiz.json` file for MVP1.
+
+## **3. Naming Conventions**
+
+Consistent naming is critical for readability.
+
+*   **Components:** `PascalCase` (e.g., `QuizCard`, `ProgressBar`).
+*   **Variables & Functions:** `camelCase` (e.g., `userScore`, `fetchQuestions`).
+*   **Styled-Components:** `PascalCase` and prefixed with `Styled` (e.g., `const StyledButton = styled.button...`).
+*   **Component Files:** Component logic will be in `index.jsx` inside a `PascalCase` directory.
+
+## **4. React Component Design**
+
+*   **Functional Components Only:** All components **must** be functional components using React Hooks. Class-based components are not to be used.
+*   **Destructure Props:** Always destructure props at the top of the component for clarity.
+*   **Explicit Returns:** Use explicit `return` statements. Avoid implicit returns for multi-line JSX to maintain clarity.
+
+## **5. State Management**
+
+*   **KISS Principle:** For MVP1, state will be managed simply.
+*   **`useState`**: Use for all local component state.
+*   **`useContext`**: Use sparingly for global state that is needed across many components (e.g., the current quiz theme, user's high score). We will avoid more complex state management libraries like Redux until they are absolutely necessary.
+
+## **6. Code Formatting & Commenting**
+
+*   **Automated Formatting:** We will use **Prettier** to automatically format all code on save. This ensures a 100% consistent style and removes any debates about formatting.
+*   **Function Comments:** All non-trivial functions must have a JSDoc-style comment block above them explaining their purpose, parameters, and what they return.
+    ```javascript
+    /**
+     * Calculates the final percentage score for the user.
+     * @param {number} score - The number of correct answers.
+     * @param {number} totalQuestions - The total number of questions in the quiz.
+     * @returns {number} The user's score as a percentage.
+     */
+    ```
+*   **Inline Comments:** Use `//` for comments on a single line to explain a specific, non-obvious piece of logic.
+
+---
+
+## **7. Implementation Status & Standards Applied**
+
+### **7.1. Component Architecture - IMPLEMENTED**
+
+✅ **Current Components Following Standards:**
+- `Background/index.jsx` - Canvas-based animated space background
+- `QuizCard/index.jsx` - Reusable quiz question display component
+- All components use functional components with hooks
+- Proper prop destructuring implemented
+- PascalCase naming convention followed
+
+### **7.2. Page Structure - IMPLEMENTED**
+
+✅ **Current Pages Following Standards:**
+- `HomePage.jsx` - Entry point with user name collection and topic selection
+- `QuizPage.jsx` - Quiz interface with navigation and scoring
+- `ScorePage.jsx` - Results display with high score tracking
+- All pages use React Router for navigation
+- State management using useState and navigation state
+
+### **7.3. Styling Standards - IMPLEMENTED**
+
+✅ **Current Styling Implementation:**
+- Styled-components with PascalCase naming (e.g., `StyledContainer`, `StyledButton`)
+- Centralized theme system in `src/styles/theme.js`
+- Global styles in `src/styles/globalStyles.js`
+- Glass morphism effects consistently applied
+- Mobile-responsive design patterns
+
+### **7.4. Data Management - IMPLEMENTED**
+
+✅ **Current Data Patterns:**
+- Static quiz data in `public/quiz.json` following JSON structure standards
+- localStorage for user data persistence
+- Proper error handling for data loading
+- Clean separation between data and presentation layers
+
+### **7.5. Navigation Standards - IMPLEMENTED**
+
+✅ **Current Navigation Implementation:**
+- React Router DOM with BrowserRouter
+- Clean URL structure (/, /quiz, /score)
+- State passing between routes for score data
+- Consistent navigation components (Home buttons)
+- Proper route protection and flow control 

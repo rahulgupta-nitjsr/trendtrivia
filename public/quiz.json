@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "question": "Which social media platform, originally known for its 6-second looping videos, was shut down in 2017 but saw a resurgence in popularity as its founder announced a successor, 'Byte'?",
+    "options": ["Vine", "TikTok", "Musical.ly", "Dubsmash"],
+    "answer": "Vine",
+    "difficulty": "Easy",
+    "category": "Tech Trends"
+  },
+  {
+    "id": 2,
+    "question": "What viral internet challenge involved people dumping buckets of ice water over their heads to raise awareness for ALS?",
+    "options": ["Cinnamon Challenge", "Tide Pod Challenge", "Ice Bucket Challenge", "Mannequin Challenge"],
+    "answer": "Ice Bucket Challenge",
+    "difficulty": "Easy",
+    "category": "Viral Challenges"
+  },
+  {
+    "id": 3,
+    "question": "The term 'binge-watching' became widespread with the rise of which streaming service, known for releasing entire seasons of its original shows at once?",
+    "options": ["Hulu", "Netflix", "Amazon Prime Video", "HBO Max"],
+    "answer": "Netflix",
+    "difficulty": "Medium",
+    "category": "Entertainment"
+  },
+  {
+    "id": 4,
+    "question": "What fashion trend, popular in the 2010s, saw a revival of 1990s styles, including choker necklaces, crop tops, and 'mom jeans'?",
+    "options": ["Boho Chic", "Normcore", "90s Revival", "Athleisure"],
+    "answer": "90s Revival",
+    "difficulty": "Medium",
+    "category": "Fashion"
+  },
+  {
+    "id": 5,
+    "question": "Which cryptocurrency experienced a massive bubble and price crash in late 2017, bringing mainstream attention to digital currencies?",
+    "options": ["Ethereum", "Ripple (XRP)", "Litecoin", "Bitcoin"],
+    "answer": "Bitcoin",
+    "difficulty": "Hard",
+    "category": "Finance & Tech"
+  }
+] 
