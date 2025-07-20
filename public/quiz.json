@@ -1,42 +1,82 @@
 [
   {
     "id": 1,
-    "question": "Which social media platform, originally known for its 6-second looping videos, was shut down in 2017 but saw a resurgence in popularity as its founder announced a successor, 'Byte'?",
-    "options": ["Vine", "TikTok", "Musical.ly", "Dubsmash"],
-    "answer": "Vine",
-    "difficulty": "Easy",
-    "category": "Tech Trends"
+    "question": "Which AI company, founded by former OpenAI employees, released Claude 3.5 Sonnet in 2024 and is known for its constitutional AI approach?",
+    "options": ["Anthropic", "Google DeepMind", "Microsoft AI", "Meta AI"],
+    "answer": "Anthropic",
+    "difficulty": "Medium",
+    "category": "Technology & AI"
   },
   {
     "id": 2,
-    "question": "What viral internet challenge involved people dumping buckets of ice water over their heads to raise awareness for ALS?",
-    "options": ["Cinnamon Challenge", "Tide Pod Challenge", "Ice Bucket Challenge", "Mannequin Challenge"],
-    "answer": "Ice Bucket Challenge",
-    "difficulty": "Easy",
-    "category": "Viral Challenges"
+    "question": "In 2024, which country became the first to approve a CRISPR-based gene therapy for treating sickle cell disease?",
+    "options": ["United States", "United Kingdom", "Germany", "Japan"],
+    "answer": "United States",
+    "difficulty": "Hard",
+    "category": "Science & Medicine"
   },
   {
     "id": 3,
-    "question": "The term 'binge-watching' became widespread with the rise of which streaming service, known for releasing entire seasons of its original shows at once?",
-    "options": ["Hulu", "Netflix", "Amazon Prime Video", "HBO Max"],
-    "answer": "Netflix",
-    "difficulty": "Medium",
-    "category": "Entertainment"
+    "question": "Which social media platform, owned by Meta, was rebranded to 'X' in 2023 but many users still refer to it by its original name?",
+    "options": ["Instagram", "Facebook", "Twitter", "LinkedIn"],
+    "answer": "Twitter",
+    "difficulty": "Easy",
+    "category": "Social Media"
   },
   {
     "id": 4,
-    "question": "What fashion trend, popular in the 2010s, saw a revival of 1990s styles, including choker necklaces, crop tops, and 'mom jeans'?",
-    "options": ["Boho Chic", "Normcore", "90s Revival", "Athleisure"],
-    "answer": "90s Revival",
+    "question": "The 2024 Paris Olympics will be the first to feature which new sport that combines surfing, skateboarding, and snowboarding elements?",
+    "options": ["Breakdancing", "Sport Climbing", "Skateboarding", "Surfing"],
+    "answer": "Breakdancing",
     "difficulty": "Medium",
-    "category": "Fashion"
+    "category": "Sports"
   },
   {
     "id": 5,
-    "question": "Which cryptocurrency experienced a massive bubble and price crash in late 2017, bringing mainstream attention to digital currencies?",
-    "options": ["Ethereum", "Ripple (XRP)", "Litecoin", "Bitcoin"],
+    "question": "Which electric vehicle company, led by Elon Musk, became the world's most valuable automaker in 2024, surpassing traditional car manufacturers?",
+    "options": ["Tesla", "Rivian", "Lucid Motors", "NIO"],
+    "answer": "Tesla",
+    "difficulty": "Easy",
+    "category": "Business & Technology"
+  },
+  {
+    "id": 6,
+    "question": "In 2024, which streaming service faced significant backlash for password-sharing crackdowns and price increases?",
+    "options": ["Netflix", "Disney+", "HBO Max", "Amazon Prime"],
+    "answer": "Netflix",
+    "difficulty": "Easy",
+    "category": "Entertainment"
+  },
+  {
+    "id": 7,
+    "question": "Which cryptocurrency, often called 'digital gold,' reached new all-time highs in 2024, driven by institutional adoption and ETF approvals?",
+    "options": ["Ethereum", "Bitcoin", "Solana", "Cardano"],
     "answer": "Bitcoin",
+    "difficulty": "Medium",
+    "category": "Finance & Cryptocurrency"
+  },
+  {
+    "id": 8,
+    "question": "The James Webb Space Telescope, launched in 2021, has made groundbreaking discoveries about which cosmic phenomenon in 2024?",
+    "options": ["Black Holes", "Exoplanets", "Dark Matter", "Neutron Stars"],
+    "answer": "Exoplanets",
     "difficulty": "Hard",
-    "category": "Finance & Tech"
+    "category": "Space & Science"
+  },
+  {
+    "id": 9,
+    "question": "Which major tech company announced plans to phase out passwords in favor of passkeys for enhanced security in 2024?",
+    "options": ["Google", "Apple", "Microsoft", "Meta"],
+    "answer": "Google",
+    "difficulty": "Medium",
+    "category": "Cybersecurity"
+  },
+  {
+    "id": 10,
+    "question": "The Barbie movie, starring Margot Robbie, became the highest-grossing film of 2023 and was directed by which acclaimed filmmaker?",
+    "options": ["Greta Gerwig", "Christopher Nolan", "Denis Villeneuve", "Jordan Peele"],
+    "answer": "Greta Gerwig",
+    "difficulty": "Easy",
+    "category": "Entertainment"
   }
 ] 
