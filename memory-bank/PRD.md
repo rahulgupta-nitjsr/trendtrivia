@@ -43,6 +43,7 @@ Staying informed about rapidly changing news and trends can be time-consuming an
 * **(Developer Context) Practical, Real-World Learning:** Focus on applying concepts in a way that mirrors real product development.  
 * **(Developer Context) Free & Open Source First:** Prioritize free tiers, open-source software, and low-cost solutions for development and deployment, especially in early stages.  
 * **(Developer Context) Keep it Simple (KISS):** Avoid unnecessary complexity, especially in initial phases.
+* **(Developer Context) Modular Development:** Preference for building reusable, maintainable components and systems that can be easily extended and modified.
 
 ## **3\. Product Roadmap & Phased Releases**
 
@@ -99,6 +100,7 @@ This roadmap outlines a phased approach to developing TrendTrivia, starting with
 * **3.1.5. Developer Learning Focus:**
   *   **UI/UX Design Concepts:** You will learn the difference between Wireframes (blueprints) and Mockups (realistic visuals) and understand how they guide the development process. This is the foundation of User Interface (UI) and User Experience (UX) design.
   *   **Frontend Basics (React):** You will learn how to build the user-facing part of a website using React. Think of this as learning how to build with interactive digital LEGO bricks.
+  *   **Modular Component Architecture:** You will learn to build reusable, maintainable components following modular development principles - creating systems that can be easily extended and modified.
   *   **Application State:** You'll learn the fundamental concept of "state" – how an application remembers things like the current question number or the user's score.
   *   **Data Handling (JSON):** You will learn how to structure data in a JSON file, which is like a simple, readable phonebook for our app's information, and how to load that data into the application.
   *   **Basic Deployment:** You will learn how to take the application from your local computer and publish it to the internet for the world to see using Cloudflare Pages.
