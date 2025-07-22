@@ -32,6 +32,16 @@ const MainHeading = styled.h1`
   letter-spacing: 0.1em;
 `;
 
+const SubHeading = styled.p`
+  font-size: ${({ theme }) => theme.fontSizes.medium};
+  color: ${({ theme }) => theme.colors.textSecondary};
+  margin-bottom: ${({ theme }) => theme.spacing.large};
+  line-height: 1.6;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+`;
+
 const TopicsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -46,15 +56,19 @@ const TopicButton = styled.button`
     isActive ? theme.colors.text : theme.colors.textSecondary};
   border: 1px solid ${({ isActive, theme }) => 
     isActive ? theme.colors.primary : 'rgba(255, 255, 255, 0.1)'};
-  border-radius: 8px;
-  padding: ${({ theme }) => theme.spacing.medium};
+  border-radius: 12px;
+  padding: ${({ theme }) => theme.spacing.large};
   font-size: ${({ theme }) => theme.fontSizes.medium};
   font-family: ${({ theme }) => theme.fonts.main};
-  font-weight: 400;
+  font-weight: 600;
   cursor: ${({ isActive }) => isActive ? 'pointer' : 'not-allowed'};
   transition: all 0.3s ease-in-out;
   opacity: ${({ isActive }) => isActive ? 1 : 0.5};
   text-shadow: ${({ isActive, theme }) => isActive ? theme.shadows.text : 'none'};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.small};
 
   &:hover {
     ${({ isActive, theme }) => isActive && `
@@ -63,6 +77,11 @@ const TopicButton = styled.button`
       background: rgba(0, 191, 255, 0.2);
     `}
   }
+`;
+
+const TopicIcon = styled.div`
+  font-size: 2rem;
+  margin-bottom: ${({ theme }) => theme.spacing.small};
 `;
 
 const HighScoreBanner = styled.div`
@@ -108,24 +127,18 @@ const HighScoreText = styled.div`
   text-shadow: ${({ theme }) => theme.shadows.text};
 `;
 
+const QuoteText = styled.p`
+  font-style: italic;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: ${({ theme }) => theme.fontSizes.small};
+  margin-top: ${({ theme }) => theme.spacing.large};
+`;
+
 const HomePage = () => {
-  const [userName, setUserName] = useState('');
   const [highScore, setHighScore] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get user name from localStorage or prompt for it
-    const storedName = localStorage.getItem('trendtrivia-username');
-    if (storedName) {
-      setUserName(storedName);
-    } else {
-      const name = prompt('Welcome! What\'s your name?');
-      if (name) {
-        localStorage.setItem('trendtrivia-username', name);
-        setUserName(name);
-      }
-    }
-
     // Get high score from localStorage
     const storedHighScore = localStorage.getItem('trendtrivia-highscore');
     if (storedHighScore) {
@@ -134,39 +147,57 @@ const HomePage = () => {
   }, []);
 
   const handleTopicSelect = (topic) => {
-    if (topic === 'Finance') {
-      navigate('/quiz');
-    }
+    navigate('/topic', { state: { topic } });
   };
 
   return (
     <HomeContainer>
       <WelcomeCard>
-        <WelcomeText>Welcome, {userName || 'Player'}!</WelcomeText>
+        <WelcomeText>Welcome to the Challenge!</WelcomeText>
         
-        <MainHeading>SO YOU THINK YOU ARE UPTO DATE?</MainHeading>
+        <MainHeading>SO YOU THINK YOU ARE UP TO DATE?</MainHeading>
+        
+        <SubHeading>
+          Select a topic below to see how well you keep up with the world. 
+          Each quiz is a fun, fast-paced test of your trend-spotting skills.
+        </SubHeading>
         
         <TopicsGrid>
           <TopicButton 
             isActive={true} 
+            onClick={() => handleTopicSelect('Technology')}
+          >
+            <TopicIcon>💻</TopicIcon>
+            TECHNOLOGY
+          </TopicButton>
+          <TopicButton 
+            isActive={true} 
+            onClick={() => handleTopicSelect('Pop Culture')}
+          >
+            <TopicIcon>🎬</TopicIcon>
+            POP CULTURE
+          </TopicButton>
+          <TopicButton 
+            isActive={true} 
             onClick={() => handleTopicSelect('Finance')}
           >
+            <TopicIcon>💰</TopicIcon>
             FINANCE
           </TopicButton>
-          <TopicButton isActive={false}>
-            ENTERTAINMENT
-          </TopicButton>
-          <TopicButton isActive={false}>
-            WORLD
-          </TopicButton>
-          <TopicButton isActive={false}>
-            GENERAL
+          <TopicButton 
+            isActive={true} 
+            onClick={() => handleTopicSelect('Start-ups')}
+          >
+            <TopicIcon>🚀</TopicIcon>
+            START-UPS
           </TopicButton>
         </TopicsGrid>
         
         <HighScoreBanner>
-          <HighScoreText>HIGH SCORE</HighScoreText>
+          <HighScoreText>HIGH SCORE: {highScore}</HighScoreText>
         </HighScoreBanner>
+        
+        <QuoteText>"The only true wisdom is in knowing you know nothing." - Socrates</QuoteText>
       </WelcomeCard>
     </HomeContainer>
   );
