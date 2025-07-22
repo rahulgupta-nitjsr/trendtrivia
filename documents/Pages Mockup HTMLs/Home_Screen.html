@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trend Trivia</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .card {
+            background-color: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .btn {
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background-color: #4f46e5;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #4338ca;
+        }
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+        .btn-secondary:hover {
+            background-color: #d1d5db;
+        }
+        .btn-selected {
+            background-color: #4f46e5;
+            color: white;
+        }
+        .topic-card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            color: #1f2937;
+        }
+        .topic-card:hover {
+            border-color: #4f46e5;
+            background-color: #eef2ff;
+        }
+        .quiz-option {
+            border: 2px solid #e5e7eb;
+            cursor: pointer;
+        }
+        .quiz-option:hover {
+            border-color: #4f46e5;
+            background-color: #eef2ff;
+        }
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+        .quiz-option.wrong {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="main-container">
+<header class="text-center mb-12">
+<h1 class="text-5xl font-bold text-gray-800">
+<span class="material-icons text-5xl text-indigo-600 align-middle">trending_up</span>
+                Trend Trivia
+            </h1>
+<p class="text-xl text-gray-500 mt-2">Test your knowledge on what's trending in the world!</p>
+</header>
+<main>
+<section class="section active" id="home-screen">
+<div class="card text-center">
+<h2 class="text-3xl font-semibold text-gray-800 mb-4">Welcome to the Challenge!</h2>
+<p class="text-gray-600 mb-8 max-w-2xl mx-auto">Select a topic below to see how well you keep up with the world. Each quiz is a fun, fast-paced test of your trend-spotting skills.</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+<button class="topic-card card p-6" onclick="showTopic('Technology')">
+<span class="material-icons text-4xl text-indigo-500 mb-2">computer</span>
+<h3 class="text-xl font-semibold">Technology</h3>
+</button>
+<button class="topic-card card p-6" onclick="showTopic('Pop Culture')">
+<span class="material-icons text-4xl text-indigo-500 mb-2">movie</span>
+<h3 class="text-xl font-semibold">Pop culture</h3>
+</button>
+<button class="topic-card card p-6" onclick="showTopic('Finance')">
+<span class="material-icons text-4xl text-indigo-500 mb-2">account_balance_wallet</span>
+<h3 class="text-xl font-semibold">Finance</h3>
+</button>
+<button class="topic-card card p-6" onclick="showTopic('Start-ups')">
+<span class="material-icons text-4xl text-indigo-500 mb-2">rocket_launch</span>
+<h3 class="text-xl font-semibold">Start-ups</h3>
+</button>
+</div>
+<p class="text-gray-500 italic">"The only true wisdom is in knowing you know nothing." - Socrates</p>
+</div>
+</section>
+<section class="section" id="topic-screen">
+<div class="card">
+<button class="btn btn-secondary mb-8" onclick="showScreen('home-screen')">
+<span class="material-icons align-middle text-lg">arrow_back</span> Back
+                    </button>
+<div class="text-center">
+<h2 class="text-4xl font-bold text-gray-800 mb-6" id="topic-title"></h2>
+<div class="max-w-2xl mx-auto">
+<h3 class="text-xl font-semibold text-gray-700 mb-2">Game Rules</h3>
+<div class="bg-gray-100 p-6 rounded-xl text-left text-gray-600 mb-8">
+<ul class="list-disc list-inside space-y-2">
+<li>Each quiz consists of 10 multiple-choice questions.</li>
+<li>You'll have 15 seconds to answer each question.</li>
+<li>Points are awarded for correct answers and speed.</li>
+<li>After each answer, you'll see a brief explanation.</li>
+<li>Your final score will be revealed at the end!</li>
+</ul>
+</div>
+<h3 class="text-xl font-semibold text-gray-700 mb-4">Time Duration</h3>
+<div class="flex justify-center space-x-4 mb-10" id="duration-options">
+<button class="btn btn-secondary duration-btn" onclick="selectDuration(this, 'week')">Last Week</button>
+<button class="btn btn-secondary duration-btn btn-selected" onclick="selectDuration(this, 'month')">Last Month</button>
+<button class="btn btn-secondary duration-btn" onclick="selectDuration(this, 'year')">Last Year</button>
+</div>
+<button class="btn btn-primary w-full md:w-auto text-lg" onclick="showScreen('quiz-screen')">
+                                Start Quiz <span class="material-icons align-middle">play_arrow</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<section class="section" id="quiz-screen">
+<div class="card relative">
+<div class="absolute top-6 right-6 bg-indigo-100 text-indigo-800 text-lg font-semibold px-4 py-2 rounded-lg">
+                        Score: <span id="score">0</span>
+</div>
+<div class="mb-8">
+<p class="text-gray-500 text-lg">Question 1 of 10</p>
+<h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mt-2">What was the most downloaded mobile app worldwide in the last month?</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+<div class="quiz-option p-4 rounded-lg flex items-center space-x-4" onclick="selectAnswer(this, false)">
+<div class="bg-gray-200 text-gray-600 w-10 h-10 flex items-center justify-center rounded-full font-bold text-lg">A</div>
+<span class="text-lg text-gray-700">TikTok</span>
+</div>
+<div class="quiz-option p-4 rounded-lg flex items-center space-x-4" onclick="selectAnswer(this, true)">
+<div class="bg-gray-200 text-gray-600 w-10 h-10 flex items-center justify-center rounded-full font-bold text-lg">B</div>
+<span class="text-lg text-gray-700">Instagram</span>
+</div>
+<div class="quiz-option p-4 rounded-lg flex items-center space-x-4" onclick="selectAnswer(this, false)">
+<div class="bg-gray-200 text-gray-600 w-10 h-10 flex items-center justify-center rounded-full font-bold text-lg">C</div>
+<span class="text-lg text-gray-700">Threads</span>
+</div>
+<div class="quiz-option p-4 rounded-lg flex items-center space-x-4" onclick="selectAnswer(this, false)">
+<div class="bg-gray-200 text-gray-600 w-10 h-10 flex items-center justify-center rounded-full font-bold text-lg">D</div>
+<span class="text-lg text-gray-700">X (Twitter)</span>
+</div>
+</div>
+<div class="hidden mt-6 p-4 rounded-lg" id="explanation">
+<h4 class="font-bold text-xl mb-2" id="result-text"></h4>
+<p class="text-gray-700" id="explanation-text"></p>
+</div>
+<div class="mt-8 text-right">
+<button class="btn btn-primary" onclick="showScreen('home-screen')">Next Question <span class="material-icons align-middle">arrow_forward</span></button>
+</div>
+</div>
+</section>
+</main>
+</div>
+<script>
+        let currentScreen = 'home-screen';
+        let selectedTopic = '';
+        let selectedDuration = 'month';
+        function showScreen(screenId) {
+            document.getElementById(currentScreen).classList.remove('active');
+            document.getElementById(screenId).classList.add('active');
+            currentScreen = screenId;
+            window.scrollTo(0, 0);
+        }
+        function showTopic(topic) {
+            selectedTopic = topic;
+            document.getElementById('topic-title').innerText = topic + " Trivia";
+            showScreen('topic-screen');
+        }
+        function selectDuration(button, duration) {
+            selectedDuration = duration;
+            document.querySelectorAll('.duration-btn').forEach(btn => btn.classList.remove('btn-selected'));
+            button.classList.add('btn-selected');
+        }
+        function selectAnswer(element, isCorrect) {
+            // Disable all options after one is clicked
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                // Remove hover effects
+                opt.classList.remove('quiz-option:hover');
+            });
+            const explanationDiv = document.getElementById('explanation');
+            const resultText = document.getElementById('result-text');
+            const explanationText = document.getElementById('explanation-text');
+            if (isCorrect) {
+                element.classList.add('correct');
+                resultText.innerText = "Correct!";
+                resultText.className = 'font-bold text-xl mb-2 text-green-700';
+                explanationDiv.classList.add('bg-green-100');
+                explanationDiv.classList.remove('bg-red-100');
+                explanationText.innerText = "That's right! Instagram has been leading the charts for downloads recently, especially with its Reels feature gaining massive popularity.";
+                document.getElementById('score').innerText = parseInt(document.getElementById('score').innerText) + 10;
+            } else {
+                element.classList.add('wrong');
+                resultText.innerText = "Incorrect!";
+                resultText.className = 'font-bold text-xl mb-2 text-red-700';
+                explanationDiv.classList.add('bg-red-100');
+                explanationDiv.classList.remove('bg-green-100');
+                explanationText.innerText = "While a good guess, Instagram was actually the most downloaded app. TikTok remains a strong competitor, but Instagram took the lead this time.";
+                // Highlight the correct answer
+                document.querySelectorAll('.quiz-option').forEach(opt => {
+                    // This is a simple example; in a real app, you'd check the correct answer's ID.
+                    if (opt.textContent.includes('Instagram')) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+            explanationDiv.classList.remove('hidden');
+        }
+    </script>
+
+</body></html>

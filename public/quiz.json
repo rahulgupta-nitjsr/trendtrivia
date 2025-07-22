@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+<<<<<<< HEAD
     "question": "Which AI company, founded by former OpenAI employees, released Claude 3.5 Sonnet in 2024 and is known for its constitutional AI approach?",
     "options": ["Anthropic", "Google DeepMind", "Microsoft AI", "Meta AI"],
     "answer": "Anthropic",
@@ -78,5 +79,324 @@
     "answer": "Greta Gerwig",
     "difficulty": "Easy",
     "category": "Entertainment"
+=======
+    "question": "Which company released a quantum chip in 2024 that completes 33.3 trillion years of calculations in 1 nanosecond?",
+    "options": ["IBM", "Google", "Intel", "Apple"],
+    "answer": "Google",
+    "difficulty": "Hard",
+    "category": "Technology"
+  },
+  {
+    "id": 2,
+    "question": "What AI model, released in May 2024, is known for its enhanced contextual understanding and multilingual proficiency?",
+    "options": ["GPT-4o", "Gemini Ultra", "Claude 3", "Llama 3"],
+    "answer": "GPT-4o",
+    "difficulty": "Medium",
+    "category": "Technology"
+  },
+  {
+    "id": 3,
+    "question": "Which country became the first where electric cars outnumbered petrol cars in 2024?",
+    "options": ["Sweden", "Norway", "Germany", "Netherlands"],
+    "answer": "Norway",
+    "difficulty": "Medium",
+    "category": "Technology"
+  },
+  {
+    "id": 4,
+    "question": "What is the name of the NASA mission in 2024 that returned humans to the Moon, including the first woman and person of color?",
+    "options": ["Artemis III", "Apollo 18", "LunarX", "Odysseus"],
+    "answer": "Artemis III",
+    "difficulty": "Medium",
+    "category": "Technology"
+  },
+  {
+    "id": 5,
+    "question": "Which messaging app's founder was arrested in France in 2024 for alleged involvement in organized crime?",
+    "options": ["Signal", "Telegram", "WhatsApp", "WeChat"],
+    "answer": "Telegram",
+    "difficulty": "Hard",
+    "category": "Technology"
+  },
+  {
+    "id": 6,
+    "question": "Which company unveiled the Axiom Extravehicular Mobility Unit (AxEMU) spacesuit for NASA's Artemis III mission in 2024?",
+    "options": ["SpaceX", "Prada", "Boeing", "Nike"],
+    "answer": "Prada",
+    "difficulty": "Medium",
+    "category": "Technology"
+  },
+  {
+    "id": 7,
+    "question": "What major tech regulation did the European Union implement for the first time in 2024?",
+    "options": ["AI regulations", "Crypto ban", "5G ban", "Social media tax"],
+    "answer": "AI regulations",
+    "difficulty": "Medium",
+    "category": "Technology"
+  },
+  {
+    "id": 8,
+    "question": "Which company launched a satellite network in 2024 to rival Starlink, with an $11 billion contract from the EU?",
+    "options": ["Amazon", "OneWeb", "EU Consortium", "SpaceX"],
+    "answer": "EU Consortium",
+    "difficulty": "Hard",
+    "category": "Technology"
+  },
+  {
+    "id": 9,
+    "question": "What was the name of the first private spacecraft to land on the Moon in 2024?",
+    "options": ["Odysseus", "Luna 25", "Blue Moon", "Starship"],
+    "answer": "Odysseus",
+    "difficulty": "Medium",
+    "category": "Technology"
+  },
+  {
+    "id": 10,
+    "question": "Which country experienced the most intense geomagnetic storm since 1989, disrupting satellites and power grids in 2024?",
+    "options": ["USA", "China", "Earth (global)", "Russia"],
+    "answer": "Earth (global)",
+    "difficulty": "Medium",
+    "category": "Technology"
+  },
+  {
+    "id": 11,
+    "question": "Which animated film became the highest-grossing animated film ever in July 2024?",
+    "options": ["Frozen II", "Inside Out 2", "Minions: The Rise of Gru", "Toy Story 4"],
+    "answer": "Inside Out 2",
+    "difficulty": "Easy",
+    "category": "Pop Culture"
+  },
+  {
+    "id": 12,
+    "question": "Who won the 2024 Eurovision Song Contest with the song 'The Code'?",
+    "options": ["Nemo (Switzerland)", "Loreen (Sweden)", "Chanel (Spain)", "Daði Freyr (Iceland)"],
+    "answer": "Nemo (Switzerland)",
+    "difficulty": "Medium",
+    "category": "Pop Culture"
+  },
+  {
+    "id": 13,
+    "question": "Which artist became the first musician to become a billionaire solely from songs and concerts in 2024?",
+    "options": ["Taylor Swift", "Beyoncé", "Ed Sheeran", "Drake"],
+    "answer": "Taylor Swift",
+    "difficulty": "Medium",
+    "category": "Pop Culture"
+  },
+  {
+    "id": 14,
+    "question": "Which song won the 2024 Grammy Award for Song of the Year?",
+    "options": ["Espresso", "What Was I Made For?", "Not Like Us", "Birds of a Feather"],
+    "answer": "What Was I Made For?",
+    "difficulty": "Medium",
+    "category": "Pop Culture"
+  },
+  {
+    "id": 15,
+    "question": "Who won Best Director at the 2024 Academy Awards?",
+    "options": ["Christopher Nolan", "Greta Gerwig", "Martin Scorsese", "Yorgos Lanthimos"],
+    "answer": "Christopher Nolan",
+    "difficulty": "Medium",
+    "category": "Pop Culture"
+  },
+  {
+    "id": 16,
+    "question": "Which pop star made the cover of the TIME100 list of the world’s most influential people in April 2024?",
+    "options": ["Dua Lipa", "Billie Eilish", "Sabrina Carpenter", "Olivia Rodrigo"],
+    "answer": "Dua Lipa",
+    "difficulty": "Medium",
+    "category": "Pop Culture"
+  },
+  {
+    "id": 17,
+    "question": "Which artist became the most nominated in Grammy history with her 99th nomination in 2024?",
+    "options": ["Beyoncé", "Taylor Swift", "Adele", "Lady Gaga"],
+    "answer": "Beyoncé",
+    "difficulty": "Medium",
+    "category": "Pop Culture"
+  },
+  {
+    "id": 18,
+    "question": "Which celebrity couple got married in 2024?",
+    "options": ["Jake Bongiovi & Millie Bobby Brown", "Taylor Swift & Travis Kelce", "Zendaya & Tom Holland", "Ariana Grande & Ethan Slater"],
+    "answer": "Jake Bongiovi & Millie Bobby Brown",
+    "difficulty": "Medium",
+    "category": "Pop Culture"
+  },
+  {
+    "id": 19,
+    "question": "Which artist won the 2024 Grammy for Best New Artist?",
+    "options": ["Victoria Monét", "Ice Spice", "Noah Kahan", "Peso Pluma"],
+    "answer": "Victoria Monét",
+    "difficulty": "Medium",
+    "category": "Pop Culture"
+  },
+  {
+    "id": 20,
+    "question": "Which movie won Best Film at the 2024 Academy Awards?",
+    "options": ["Oppenheimer", "Poor Things", "Barbie", "Killers of the Flower Moon"],
+    "answer": "Oppenheimer",
+    "difficulty": "Medium",
+    "category": "Pop Culture"
+  },
+  {
+    "id": 21,
+    "question": "On December 5, 2024, which cryptocurrency surpassed $100,000 for the first time?",
+    "options": ["Ethereum", "Bitcoin", "Dogecoin", "Solana"],
+    "answer": "Bitcoin",
+    "difficulty": "Medium",
+    "category": "Finance"
+  },
+  {
+    "id": 22,
+    "question": "Which country became the first to include access to abortion in its constitution in 2024?",
+    "options": ["France", "Germany", "Canada", "Spain"],
+    "answer": "France",
+    "difficulty": "Medium",
+    "category": "Finance"
+  },
+  {
+    "id": 23,
+    "question": "Which company filed for bankruptcy after nearly 80 years of business in 2024?",
+    "options": ["Tupperware", "Bed Bath & Beyond", "Sears", "Blockbuster"],
+    "answer": "Tupperware",
+    "difficulty": "Medium",
+    "category": "Finance"
+  },
+  {
+    "id": 24,
+    "question": "Which country elected its first female president, Claudia Sheinbaum, in 2024?",
+    "options": ["Mexico", "Brazil", "Argentina", "Chile"],
+    "answer": "Mexico",
+    "difficulty": "Medium",
+    "category": "Finance"
+  },
+  {
+    "id": 25,
+    "question": "Which company was awarded an $11 billion contract by the EU to build a satellite network in 2024?",
+    "options": ["EU Consortium", "SpaceX", "Amazon", "OneWeb"],
+    "answer": "EU Consortium",
+    "difficulty": "Hard",
+    "category": "Finance"
+  },
+  {
+    "id": 26,
+    "question": "Which country experienced the costliest Atlantic hurricane season on record in 2024, with damages nearing $200 billion?",
+    "options": ["USA", "Mexico", "Cuba", "Bahamas"],
+    "answer": "USA",
+    "difficulty": "Medium",
+    "category": "Finance"
+  },
+  {
+    "id": 27,
+    "question": "Which company’s value surge in 2024 was attributed to President-elect Donald Trump’s supportive stance on cryptocurrencies?",
+    "options": ["Bitcoin", "Ethereum", "Solana", "Dogecoin"],
+    "answer": "Bitcoin",
+    "difficulty": "Medium",
+    "category": "Finance"
+  },
+  {
+    "id": 28,
+    "question": "Which country became the first Orthodox Christian country to legalize same-sex marriage and adoption in 2024?",
+    "options": ["Greece", "Russia", "Serbia", "Bulgaria"],
+    "answer": "Greece",
+    "difficulty": "Medium",
+    "category": "Finance"
+  },
+  {
+    "id": 29,
+    "question": "Which company was found guilty of 34 felony counts of falsified business records in May 2024?",
+    "options": ["Donald Trump Organization", "FTX", "Theranos", "Enron"],
+    "answer": "Donald Trump Organization",
+    "difficulty": "Hard",
+    "category": "Finance"
+  },
+  {
+    "id": 30,
+    "question": "Which country set the record for the world’s largest election in June 2024, with 642 million people voting?",
+    "options": ["India", "USA", "China", "Indonesia"],
+    "answer": "India",
+    "difficulty": "Medium",
+    "category": "Finance"
+  },
+  {
+    "id": 31,
+    "question": "Which AI model released in 2024 is being rapidly adopted by start-ups for its multilingual and contextual capabilities?",
+    "options": ["GPT-4o", "Gemini Ultra", "Claude 3", "Llama 3"],
+    "answer": "GPT-4o",
+    "difficulty": "Medium",
+    "category": "Start-Ups"
+  },
+  {
+    "id": 32,
+    "question": "Which messaging app, founded by Pavel Durov, faced legal trouble in France in 2024?",
+    "options": ["Telegram", "Signal", "WhatsApp", "Discord"],
+    "answer": "Telegram",
+    "difficulty": "Medium",
+    "category": "Start-Ups"
+  },
+  {
+    "id": 33,
+    "question": "Which company’s satellite network project in 2024 is expected to boost European start-up innovation in space tech?",
+    "options": ["EU Consortium", "SpaceX", "Amazon", "OneWeb"],
+    "answer": "EU Consortium",
+    "difficulty": "Hard",
+    "category": "Start-Ups"
+  },
+  {
+    "id": 34,
+    "question": "Which AI company released a model in May 2024 that is now powering many new start-up products?",
+    "options": ["OpenAI", "Anthropic", "Google DeepMind", "Meta AI"],
+    "answer": "OpenAI",
+    "difficulty": "Medium",
+    "category": "Start-Ups"
+  },
+  {
+    "id": 35,
+    "question": "Which start-up sector saw a boom in 2024 due to new EU AI regulations?",
+    "options": ["AI compliance", "Crypto", "EdTech", "Food delivery"],
+    "answer": "AI compliance",
+    "difficulty": "Medium",
+    "category": "Start-Ups"
+  },
+  {
+    "id": 36,
+    "question": "Which company’s founder, Pavel Durov, was banned from leaving France in 2024?",
+    "options": ["Telegram", "Signal", "WhatsApp", "Discord"],
+    "answer": "Telegram",
+    "difficulty": "Medium",
+    "category": "Start-Ups"
+  },
+  {
+    "id": 37,
+    "question": "Which start-up trend in 2024 is driven by the demand for AI-powered multilingual customer support?",
+    "options": ["AI chatbots", "Blockchain", "IoT devices", "Food delivery"],
+    "answer": "AI chatbots",
+    "difficulty": "Medium",
+    "category": "Start-Ups"
+  },
+  {
+    "id": 38,
+    "question": "Which start-up sector is benefiting from the EU’s $11 billion satellite network project in 2024?",
+    "options": ["Space tech", "Fintech", "Healthtech", "EdTech"],
+    "answer": "Space tech",
+    "difficulty": "Medium",
+    "category": "Start-Ups"
+  },
+  {
+    "id": 39,
+    "question": "Which AI model is being used by start-ups for real-time translation and contextual understanding in 2024?",
+    "options": ["GPT-4o", "Gemini Ultra", "Claude 3", "Llama 3"],
+    "answer": "GPT-4o",
+    "difficulty": "Medium",
+    "category": "Start-Ups"
+  },
+  {
+    "id": 40,
+    "question": "Which start-up trend in 2024 is focused on compliance with new AI regulations in the EU?",
+    "options": ["AI compliance", "Crypto", "EdTech", "Food delivery"],
+    "answer": "AI compliance",
+    "difficulty": "Medium",
+    "category": "Start-Ups"
+>>>>>>> review-documentation-update
   }
 ] 
