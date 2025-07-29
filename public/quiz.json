@@ -1,85 +1,6 @@
 [
   {
     "id": 1,
-<<<<<<< HEAD
-    "question": "Which AI company, founded by former OpenAI employees, released Claude 3.5 Sonnet in 2024 and is known for its constitutional AI approach?",
-    "options": ["Anthropic", "Google DeepMind", "Microsoft AI", "Meta AI"],
-    "answer": "Anthropic",
-    "difficulty": "Medium",
-    "category": "Technology & AI"
-  },
-  {
-    "id": 2,
-    "question": "In 2024, which country became the first to approve a CRISPR-based gene therapy for treating sickle cell disease?",
-    "options": ["United States", "United Kingdom", "Germany", "Japan"],
-    "answer": "United States",
-    "difficulty": "Hard",
-    "category": "Science & Medicine"
-  },
-  {
-    "id": 3,
-    "question": "Which social media platform, owned by Meta, was rebranded to 'X' in 2023 but many users still refer to it by its original name?",
-    "options": ["Instagram", "Facebook", "Twitter", "LinkedIn"],
-    "answer": "Twitter",
-    "difficulty": "Easy",
-    "category": "Social Media"
-  },
-  {
-    "id": 4,
-    "question": "The 2024 Paris Olympics will be the first to feature which new sport that combines surfing, skateboarding, and snowboarding elements?",
-    "options": ["Breakdancing", "Sport Climbing", "Skateboarding", "Surfing"],
-    "answer": "Breakdancing",
-    "difficulty": "Medium",
-    "category": "Sports"
-  },
-  {
-    "id": 5,
-    "question": "Which electric vehicle company, led by Elon Musk, became the world's most valuable automaker in 2024, surpassing traditional car manufacturers?",
-    "options": ["Tesla", "Rivian", "Lucid Motors", "NIO"],
-    "answer": "Tesla",
-    "difficulty": "Easy",
-    "category": "Business & Technology"
-  },
-  {
-    "id": 6,
-    "question": "In 2024, which streaming service faced significant backlash for password-sharing crackdowns and price increases?",
-    "options": ["Netflix", "Disney+", "HBO Max", "Amazon Prime"],
-    "answer": "Netflix",
-    "difficulty": "Easy",
-    "category": "Entertainment"
-  },
-  {
-    "id": 7,
-    "question": "Which cryptocurrency, often called 'digital gold,' reached new all-time highs in 2024, driven by institutional adoption and ETF approvals?",
-    "options": ["Ethereum", "Bitcoin", "Solana", "Cardano"],
-    "answer": "Bitcoin",
-    "difficulty": "Medium",
-    "category": "Finance & Cryptocurrency"
-  },
-  {
-    "id": 8,
-    "question": "The James Webb Space Telescope, launched in 2021, has made groundbreaking discoveries about which cosmic phenomenon in 2024?",
-    "options": ["Black Holes", "Exoplanets", "Dark Matter", "Neutron Stars"],
-    "answer": "Exoplanets",
-    "difficulty": "Hard",
-    "category": "Space & Science"
-  },
-  {
-    "id": 9,
-    "question": "Which major tech company announced plans to phase out passwords in favor of passkeys for enhanced security in 2024?",
-    "options": ["Google", "Apple", "Microsoft", "Meta"],
-    "answer": "Google",
-    "difficulty": "Medium",
-    "category": "Cybersecurity"
-  },
-  {
-    "id": 10,
-    "question": "The Barbie movie, starring Margot Robbie, became the highest-grossing film of 2023 and was directed by which acclaimed filmmaker?",
-    "options": ["Greta Gerwig", "Christopher Nolan", "Denis Villeneuve", "Jordan Peele"],
-    "answer": "Greta Gerwig",
-    "difficulty": "Easy",
-    "category": "Entertainment"
-=======
     "question": "Which company released a quantum chip in 2024 that completes 33.3 trillion years of calculations in 1 nanosecond?",
     "options": ["IBM", "Google", "Intel", "Apple"],
     "answer": "Google",
@@ -120,273 +41,273 @@
   },
   {
     "id": 6,
-    "question": "Which company unveiled the Axiom Extravehicular Mobility Unit (AxEMU) spacesuit for NASA's Artemis III mission in 2024?",
-    "options": ["SpaceX", "Prada", "Boeing", "Nike"],
-    "answer": "Prada",
-    "difficulty": "Medium",
+    "question": "What is the name of the new Apple chip released in 2024 that powers the latest MacBooks and iMacs?",
+    "options": ["M3 Pro", "M4", "A18", "M3 Ultra"],
+    "answer": "M4",
+    "difficulty": "Easy",
     "category": "Technology"
   },
   {
     "id": 7,
-    "question": "What major tech regulation did the European Union implement for the first time in 2024?",
-    "options": ["AI regulations", "Crypto ban", "5G ban", "Social media tax"],
-    "answer": "AI regulations",
-    "difficulty": "Medium",
+    "question": "Which social media platform launched 'Threads' in 2023 to compete with Twitter/X?",
+    "options": ["Meta", "Google", "Microsoft", "TikTok"],
+    "answer": "Meta",
+    "difficulty": "Easy",
     "category": "Technology"
   },
   {
     "id": 8,
-    "question": "Which company launched a satellite network in 2024 to rival Starlink, with an $11 billion contract from the EU?",
-    "options": ["Amazon", "OneWeb", "EU Consortium", "SpaceX"],
-    "answer": "EU Consortium",
-    "difficulty": "Hard",
+    "question": "What is the latest version of Android released by Google in 2024?",
+    "options": ["Android 14", "Android 15", "Android 13", "Android 16"],
+    "answer": "Android 15",
+    "difficulty": "Medium",
     "category": "Technology"
   },
   {
     "id": 9,
-    "question": "What was the name of the first private spacecraft to land on the Moon in 2024?",
-    "options": ["Odysseus", "Luna 25", "Blue Moon", "Starship"],
-    "answer": "Odysseus",
+    "question": "Which company acquired Figma for $20 billion in 2022 but faced regulatory challenges in 2024?",
+    "options": ["Adobe", "Microsoft", "Google", "Meta"],
+    "answer": "Adobe",
     "difficulty": "Medium",
     "category": "Technology"
   },
   {
     "id": 10,
-    "question": "Which country experienced the most intense geomagnetic storm since 1989, disrupting satellites and power grids in 2024?",
-    "options": ["USA", "China", "Earth (global)", "Russia"],
-    "answer": "Earth (global)",
+    "question": "What is the name of OpenAI's latest multimodal AI model released in 2024?",
+    "options": ["GPT-5", "GPT-4 Turbo", "GPT-4o", "Claude 4"],
+    "answer": "GPT-4o",
     "difficulty": "Medium",
     "category": "Technology"
   },
   {
     "id": 11,
-    "question": "Which animated film became the highest-grossing animated film ever in July 2024?",
-    "options": ["Frozen II", "Inside Out 2", "Minions: The Rise of Gru", "Toy Story 4"],
+    "question": "Which movie dominated the 2024 box office and became the highest-grossing film of the year?",
+    "options": ["Dune: Part Two", "Deadpool & Wolverine", "Inside Out 2", "Wicked"],
     "answer": "Inside Out 2",
-    "difficulty": "Easy",
+    "difficulty": "Medium",
     "category": "Pop Culture"
   },
   {
     "id": 12,
-    "question": "Who won the 2024 Eurovision Song Contest with the song 'The Code'?",
-    "options": ["Nemo (Switzerland)", "Loreen (Sweden)", "Chanel (Spain)", "Daði Freyr (Iceland)"],
-    "answer": "Nemo (Switzerland)",
-    "difficulty": "Medium",
+    "question": "Who won the Grammy Award for Album of the Year in 2024?",
+    "options": ["Taylor Swift", "Billie Eilish", "Harry Styles", "Miley Cyrus"],
+    "answer": "Taylor Swift",
+    "difficulty": "Easy",
     "category": "Pop Culture"
   },
   {
     "id": 13,
-    "question": "Which artist became the first musician to become a billionaire solely from songs and concerts in 2024?",
-    "options": ["Taylor Swift", "Beyoncé", "Ed Sheeran", "Drake"],
-    "answer": "Taylor Swift",
-    "difficulty": "Medium",
+    "question": "Which streaming service produced the hit series 'Wednesday' starring Jenna Ortega?",
+    "options": ["Netflix", "Disney+", "HBO Max", "Amazon Prime"],
+    "answer": "Netflix",
+    "difficulty": "Easy",
     "category": "Pop Culture"
   },
   {
     "id": 14,
-    "question": "Which song won the 2024 Grammy Award for Song of the Year?",
-    "options": ["Espresso", "What Was I Made For?", "Not Like Us", "Birds of a Feather"],
-    "answer": "What Was I Made For?",
+    "question": "What social media dance trend went viral in 2024, particularly among Gen Z users?",
+    "options": ["Renegade 2.0", "Silhouette Challenge", "Corn Kid Dance", "Wednesday Dance"],
+    "answer": "Wednesday Dance",
     "difficulty": "Medium",
     "category": "Pop Culture"
   },
   {
     "id": 15,
-    "question": "Who won Best Director at the 2024 Academy Awards?",
-    "options": ["Christopher Nolan", "Greta Gerwig", "Martin Scorsese", "Yorgos Lanthimos"],
-    "answer": "Christopher Nolan",
+    "question": "Which celebrity couple's divorce dominated entertainment news in 2024?",
+    "options": ["Kim Kardashian & Pete Davidson", "Ariana Grande & Dalton Gomez", "Jennifer Lopez & Ben Affleck", "Shakira & Gerard Piqué"],
+    "answer": "Jennifer Lopez & Ben Affleck",
     "difficulty": "Medium",
     "category": "Pop Culture"
   },
   {
     "id": 16,
-    "question": "Which pop star made the cover of the TIME100 list of the world’s most influential people in April 2024?",
-    "options": ["Dua Lipa", "Billie Eilish", "Sabrina Carpenter", "Olivia Rodrigo"],
-    "answer": "Dua Lipa",
-    "difficulty": "Medium",
+    "question": "What is the name of the reality TV show that became a global phenomenon in 2024, featuring physical and mental challenges?",
+    "options": ["Squid Game: The Challenge", "The Traitors", "Physical: 100", "Single's Inferno"],
+    "answer": "Squid Game: The Challenge",
+    "difficulty": "Hard",
     "category": "Pop Culture"
   },
   {
     "id": 17,
-    "question": "Which artist became the most nominated in Grammy history with her 99th nomination in 2024?",
-    "options": ["Beyoncé", "Taylor Swift", "Adele", "Lady Gaga"],
-    "answer": "Beyoncé",
-    "difficulty": "Medium",
+    "question": "Which artist's concert tour became the highest-grossing tour of all time in 2024?",
+    "options": ["Taylor Swift", "Beyoncé", "Harry Styles", "Bad Bunny"],
+    "answer": "Taylor Swift",
+    "difficulty": "Easy",
     "category": "Pop Culture"
   },
   {
     "id": 18,
-    "question": "Which celebrity couple got married in 2024?",
-    "options": ["Jake Bongiovi & Millie Bobby Brown", "Taylor Swift & Travis Kelce", "Zendaya & Tom Holland", "Ariana Grande & Ethan Slater"],
-    "answer": "Jake Bongiovi & Millie Bobby Brown",
-    "difficulty": "Medium",
+    "question": "What video game dominated social media and pop culture discussions in 2024?",
+    "options": ["Fortnite", "Among Us", "Palworld", "Baldur's Gate 3"],
+    "answer": "Palworld",
+    "difficulty": "Hard",
     "category": "Pop Culture"
   },
   {
     "id": 19,
-    "question": "Which artist won the 2024 Grammy for Best New Artist?",
-    "options": ["Victoria Monét", "Ice Spice", "Noah Kahan", "Peso Pluma"],
-    "answer": "Victoria Monét",
+    "question": "Which fashion brand made headlines in 2024 for its controversial advertising campaign?",
+    "options": ["Balenciaga", "Gucci", "Louis Vuitton", "Prada"],
+    "answer": "Balenciaga",
     "difficulty": "Medium",
     "category": "Pop Culture"
   },
   {
     "id": 20,
-    "question": "Which movie won Best Film at the 2024 Academy Awards?",
-    "options": ["Oppenheimer", "Poor Things", "Barbie", "Killers of the Flower Moon"],
-    "answer": "Oppenheimer",
-    "difficulty": "Medium",
+    "question": "What meme format became extremely popular in 2024, often used to express relatable situations?",
+    "options": ["Distracted Boyfriend", "Woman Yelling at Cat", "Ohio Memes", "Drake Pointing"],
+    "answer": "Ohio Memes",
+    "difficulty": "Hard",
     "category": "Pop Culture"
   },
   {
     "id": 21,
-    "question": "On December 5, 2024, which cryptocurrency surpassed $100,000 for the first time?",
-    "options": ["Ethereum", "Bitcoin", "Dogecoin", "Solana"],
-    "answer": "Bitcoin",
-    "difficulty": "Medium",
+    "question": "Which major central bank was the first to cut interest rates in 2024 after a series of hikes?",
+    "options": ["Federal Reserve", "European Central Bank", "Bank of England", "Bank of Canada"],
+    "answer": "European Central Bank",
+    "difficulty": "Hard",
     "category": "Finance"
   },
   {
     "id": 22,
-    "question": "Which country became the first to include access to abortion in its constitution in 2024?",
-    "options": ["France", "Germany", "Canada", "Spain"],
-    "answer": "France",
+    "question": "What was Bitcoin's approximate highest price reached in 2024?",
+    "options": ["$65,000", "$73,000", "$80,000", "$90,000"],
+    "answer": "$73,000",
     "difficulty": "Medium",
     "category": "Finance"
   },
   {
     "id": 23,
-    "question": "Which company filed for bankruptcy after nearly 80 years of business in 2024?",
-    "options": ["Tupperware", "Bed Bath & Beyond", "Sears", "Blockbuster"],
-    "answer": "Tupperware",
-    "difficulty": "Medium",
+    "question": "Which country's currency experienced significant devaluation in 2024 due to political instability?",
+    "options": ["Turkish Lira", "Argentine Peso", "Pakistani Rupee", "Lebanese Pound"],
+    "answer": "Turkish Lira",
+    "difficulty": "Hard",
     "category": "Finance"
   },
   {
     "id": 24,
-    "question": "Which country elected its first female president, Claudia Sheinbaum, in 2024?",
-    "options": ["Mexico", "Brazil", "Argentina", "Chile"],
-    "answer": "Mexico",
-    "difficulty": "Medium",
+    "question": "What major financial institution faced a crisis in 2024 similar to the 2023 banking sector turmoil?",
+    "options": ["Credit Suisse", "Deutsche Bank", "First Republic", "New York Community Bank"],
+    "answer": "New York Community Bank",
+    "difficulty": "Hard",
     "category": "Finance"
   },
   {
     "id": 25,
-    "question": "Which company was awarded an $11 billion contract by the EU to build a satellite network in 2024?",
-    "options": ["EU Consortium", "SpaceX", "Amazon", "OneWeb"],
-    "answer": "EU Consortium",
-    "difficulty": "Hard",
+    "question": "Which stock market index reached an all-time high in 2024?",
+    "options": ["S&P 500", "NASDAQ", "Dow Jones", "All of the above"],
+    "answer": "All of the above",
+    "difficulty": "Medium",
     "category": "Finance"
   },
   {
     "id": 26,
-    "question": "Which country experienced the costliest Atlantic hurricane season on record in 2024, with damages nearing $200 billion?",
-    "options": ["USA", "Mexico", "Cuba", "Bahamas"],
-    "answer": "USA",
-    "difficulty": "Medium",
+    "question": "What new financial regulation came into effect in the EU in 2024, affecting crypto markets?",
+    "options": ["MiCA", "GDPR 2.0", "PSD3", "DORA"],
+    "answer": "MiCA",
+    "difficulty": "Hard",
     "category": "Finance"
   },
   {
     "id": 27,
-    "question": "Which company’s value surge in 2024 was attributed to President-elect Donald Trump’s supportive stance on cryptocurrencies?",
-    "options": ["Bitcoin", "Ethereum", "Solana", "Dogecoin"],
-    "answer": "Bitcoin",
-    "difficulty": "Medium",
+    "question": "Which investment trend gained massive popularity among retail investors in 2024?",
+    "options": ["Meme stocks", "ESG investing", "AI stocks", "Commodities"],
+    "answer": "AI stocks",
+    "difficulty": "Easy",
     "category": "Finance"
   },
   {
     "id": 28,
-    "question": "Which country became the first Orthodox Christian country to legalize same-sex marriage and adoption in 2024?",
-    "options": ["Greece", "Russia", "Serbia", "Bulgaria"],
-    "answer": "Greece",
-    "difficulty": "Medium",
+    "question": "What was the inflation rate target that most central banks aimed for in 2024?",
+    "options": ["1%", "2%", "3%", "4%"],
+    "answer": "2%",
+    "difficulty": "Easy",
     "category": "Finance"
   },
   {
     "id": 29,
-    "question": "Which company was found guilty of 34 felony counts of falsified business records in May 2024?",
-    "options": ["Donald Trump Organization", "FTX", "Theranos", "Enron"],
-    "answer": "Donald Trump Organization",
-    "difficulty": "Hard",
+    "question": "Which commodity saw the biggest price surge in 2024?",
+    "options": ["Gold", "Oil", "Copper", "Lithium"],
+    "answer": "Gold",
+    "difficulty": "Medium",
     "category": "Finance"
   },
   {
     "id": 30,
-    "question": "Which country set the record for the world’s largest election in June 2024, with 642 million people voting?",
-    "options": ["India", "USA", "China", "Indonesia"],
-    "answer": "India",
-    "difficulty": "Medium",
+    "question": "What major economic event is expected to impact global markets in 2024?",
+    "options": ["US Presidential Election", "Brexit aftermath", "China's GDP growth", "OPEC decisions"],
+    "answer": "US Presidential Election",
+    "difficulty": "Easy",
     "category": "Finance"
   },
   {
     "id": 31,
-    "question": "Which AI model released in 2024 is being rapidly adopted by start-ups for its multilingual and contextual capabilities?",
-    "options": ["GPT-4o", "Gemini Ultra", "Claude 3", "Llama 3"],
-    "answer": "GPT-4o",
-    "difficulty": "Medium",
+    "question": "Which AI startup reached a valuation of over $100 billion in 2024?",
+    "options": ["OpenAI", "Anthropic", "Mistral AI", "Cohere"],
+    "answer": "OpenAI",
+    "difficulty": "Easy",
     "category": "Start-Ups"
   },
   {
     "id": 32,
-    "question": "Which messaging app, founded by Pavel Durov, faced legal trouble in France in 2024?",
-    "options": ["Telegram", "Signal", "WhatsApp", "Discord"],
-    "answer": "Telegram",
-    "difficulty": "Medium",
+    "question": "What type of startup funding dominated the venture capital landscape in 2024?",
+    "options": ["Fintech", "AI/ML", "Biotech", "Clean Energy"],
+    "answer": "AI/ML",
+    "difficulty": "Easy",
     "category": "Start-Ups"
   },
   {
     "id": 33,
-    "question": "Which company’s satellite network project in 2024 is expected to boost European start-up innovation in space tech?",
-    "options": ["EU Consortium", "SpaceX", "Amazon", "OneWeb"],
-    "answer": "EU Consortium",
-    "difficulty": "Hard",
+    "question": "Which startup went public via IPO in 2024 and saw massive first-day gains?",
+    "options": ["Stripe", "SpaceX", "Reddit", "Discord"],
+    "answer": "Reddit",
+    "difficulty": "Medium",
     "category": "Start-Ups"
   },
   {
     "id": 34,
-    "question": "Which AI company released a model in May 2024 that is now powering many new start-up products?",
-    "options": ["OpenAI", "Anthropic", "Google DeepMind", "Meta AI"],
-    "answer": "OpenAI",
+    "question": "What is the term for AI startups that focus on creating human-like digital assistants?",
+    "options": ["Synthetic media", "Digital humans", "Virtual beings", "AI agents"],
+    "answer": "AI agents",
     "difficulty": "Medium",
     "category": "Start-Ups"
   },
   {
     "id": 35,
-    "question": "Which start-up sector saw a boom in 2024 due to new EU AI regulations?",
-    "options": ["AI compliance", "Crypto", "EdTech", "Food delivery"],
-    "answer": "AI compliance",
+    "question": "Which startup ecosystem saw the most unicorn births in 2024?",
+    "options": ["Silicon Valley", "London", "Singapore", "Tel Aviv"],
+    "answer": "Silicon Valley",
     "difficulty": "Medium",
     "category": "Start-Ups"
   },
   {
     "id": 36,
-    "question": "Which company’s founder, Pavel Durov, was banned from leaving France in 2024?",
-    "options": ["Telegram", "Signal", "WhatsApp", "Discord"],
-    "answer": "Telegram",
-    "difficulty": "Medium",
+    "question": "What major challenge did many startups face in 2024 regarding their business models?",
+    "options": ["User acquisition", "Regulatory compliance", "Talent shortage", "Funding winter"],
+    "answer": "Funding winter",
+    "difficulty": "Hard",
     "category": "Start-Ups"
   },
   {
     "id": 37,
-    "question": "Which start-up trend in 2024 is driven by the demand for AI-powered multilingual customer support?",
-    "options": ["AI chatbots", "Blockchain", "IoT devices", "Food delivery"],
-    "answer": "AI chatbots",
-    "difficulty": "Medium",
+    "question": "Which sector saw the most startup failures in 2024?",
+    "options": ["EdTech", "FinTech", "HealthTech", "FoodTech"],
+    "answer": "EdTech",
+    "difficulty": "Hard",
     "category": "Start-Ups"
   },
   {
     "id": 38,
-    "question": "Which start-up sector is benefiting from the EU’s $11 billion satellite network project in 2024?",
-    "options": ["Space tech", "Fintech", "Healthtech", "EdTech"],
-    "answer": "Space tech",
+    "question": "What new startup trend emerged in 2024 focusing on sustainable technology?",
+    "options": ["Climate tech", "Green fintech", "Circular economy", "Carbon capture"],
+    "answer": "Climate tech",
     "difficulty": "Medium",
     "category": "Start-Ups"
   },
   {
     "id": 39,
-    "question": "Which AI model is being used by start-ups for real-time translation and contextual understanding in 2024?",
-    "options": ["GPT-4o", "Gemini Ultra", "Claude 3", "Llama 3"],
-    "answer": "GPT-4o",
+    "question": "Which startup accelerator program expanded globally in 2024?",
+    "options": ["Y Combinator", "Techstars", "500 Startups", "Plug and Play"],
+    "answer": "Y Combinator",
     "difficulty": "Medium",
     "category": "Start-Ups"
   },
@@ -397,6 +318,5 @@
     "answer": "AI compliance",
     "difficulty": "Medium",
     "category": "Start-Ups"
->>>>>>> review-documentation-update
   }
 ] 

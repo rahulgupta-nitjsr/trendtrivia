@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { getQuizQuestions } from '../services/firestoreService';
 
 const QuizContainer = styled.div`
   max-width: 1000px;
@@ -14,7 +15,13 @@ const QuizContainer = styled.div`
 `;
 
 const HomeButton = styled.button`
-  ${({ theme }) => theme.glassButton}
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.2) 0%, rgba(34, 211, 238, 0.1) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(34, 211, 238, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  color: ${({ theme }) => theme.colors.text};
   padding: ${({ theme }) => theme.spacing.small} ${({ theme }) => theme.spacing.large};
   border-radius: ${({ theme }) => theme.borderRadius};
   font-size: ${({ theme }) => theme.fontSizes.small};
@@ -51,7 +58,11 @@ const HomeButton = styled.button`
 `;
 
 const ProgressSection = styled.div`
-  ${({ theme }) => theme.glass}
+  background: rgba(31, 41, 55, 0.15);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(34, 211, 238, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(34, 211, 238, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   border-radius: ${({ theme }) => theme.borderRadiusLarge};
   padding: ${({ theme }) => theme.spacing.large};
   margin-bottom: ${({ theme }) => theme.spacing.xlarge};
@@ -108,7 +119,11 @@ const ProgressText = styled.p`
 `;
 
 const QuestionSection = styled.div`
-  ${({ theme }) => theme.glass}
+  background: rgba(31, 41, 55, 0.15);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(34, 211, 238, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(34, 211, 238, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   border-radius: ${({ theme }) => theme.borderRadiusXLarge};
   padding: ${({ theme }) => theme.spacing.xlarge};
   margin-bottom: ${({ theme }) => theme.spacing.xlarge};
@@ -128,6 +143,11 @@ const QuestionSection = styled.div`
     background: radial-gradient(circle at 25% 25%, rgba(34, 211, 238, 0.05) 0%, transparent 50%),
                 radial-gradient(circle at 75% 75%, rgba(165, 180, 252, 0.05) 0%, transparent 50%);
     pointer-events: none;
+  }
+  
+  @keyframes floating {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
   }
 `;
 
@@ -193,7 +213,15 @@ const OptionsGrid = styled.div`
 `;
 
 const OptionButton = styled.button`
-  ${({ theme }) => theme.glassButton}
+  background: ${({ selected }) => 
+    selected 
+      ? 'linear-gradient(135deg, rgba(34, 211, 238, 0.3) 0%, rgba(34, 211, 238, 0.2) 100%)'
+      : 'linear-gradient(135deg, rgba(34, 211, 238, 0.2) 0%, rgba(34, 211, 238, 0.1) 100%)'
+  };
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  color: ${({ theme }) => theme.colors.text};
   padding: ${({ theme }) => theme.spacing.large};
   border-radius: ${({ theme }) => theme.borderRadiusLarge};
   border: 1px solid ${({ selected, theme }) => 
@@ -207,12 +235,6 @@ const OptionButton = styled.button`
   align-items: center;
   justify-content: flex-start;
   gap: ${({ theme }) => theme.spacing.medium};
-  
-  background: ${({ selected, theme }) => 
-    selected 
-      ? 'linear-gradient(135deg, rgba(34, 211, 238, 0.3) 0%, rgba(34, 211, 238, 0.2) 100%)'
-      : theme.glassButton
-  };
   
   /* Enhanced hover effects from portfolio */
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -282,7 +304,11 @@ const OptionText = styled.span`
 `;
 
 const NextButton = styled.button`
-  ${({ theme }) => theme.glassButton}
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.3) 0%, rgba(34, 211, 238, 0.2) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  color: ${({ theme }) => theme.colors.text};
   padding: ${({ theme }) => theme.spacing.large} ${({ theme }) => theme.spacing.xlarge};
   border-radius: ${({ theme }) => theme.borderRadiusLarge};
   font-size: ${({ theme }) => theme.fontSizes.large};
@@ -296,8 +322,6 @@ const NextButton = styled.button`
   margin: 0 auto;
   display: block;
   min-width: 200px;
-  
-  background: linear-gradient(135deg, rgba(34, 211, 238, 0.3) 0%, rgba(34, 211, 238, 0.2) 100%);
   border: 2px solid ${({ theme }) => theme.colors.primary};
   box-shadow: 0 8px 32px 0 rgba(34, 211, 238, 0.3);
   
@@ -323,6 +347,8 @@ function QuizPage() {
   const [selectedAnswer, setSelectedAnswer] = useState('');
   const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   const { topic, category, duration } = location.state || { topic: 'Technology', category: 'technology', duration: 'month' };
 
@@ -330,23 +356,118 @@ function QuizPage() {
     loadQuestions();
   }, [category]);
 
+  useEffect(() => {
+    // Reveal animation on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    const elements = document.querySelectorAll('.reveal');
+    elements.forEach(el => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [currentQuestionIndex]); // Re-run when question changes
+
+  // Fallback questions for development/demo
+  const getFallbackQuestions = (category) => {
+    const fallbackQuestions = {
+      technology: [
+        {
+          id: 1,
+          question: "What does 'AI' stand for?",
+          options: ["Artificial Intelligence", "Automated Internet", "Advanced Interface", "Applied Innovation"],
+          correct: "Artificial Intelligence",
+          category: "technology"
+        },
+        {
+          id: 2,
+          question: "Which company developed the React framework?",
+          options: ["Google", "Facebook", "Microsoft", "Apple"],
+          correct: "Facebook",
+          category: "technology"
+        },
+        {
+          id: 3,
+          question: "What does 'HTTP' stand for?",
+          options: ["HyperText Transfer Protocol", "High Tech Transfer Process", "Home Tool Transfer Program", "Host Text Transfer Protocol"],
+          correct: "HyperText Transfer Protocol",
+          category: "technology"
+        }
+      ],
+      science: [
+        {
+          id: 1,
+          question: "What is the chemical symbol for gold?",
+          options: ["Go", "Gd", "Au", "Ag"],
+          correct: "Au",
+          category: "science"
+        },
+        {
+          id: 2,
+          question: "How many bones are in an adult human body?",
+          options: ["206", "208", "210", "204"],
+          correct: "206",
+          category: "science"
+        }
+      ],
+      general: [
+        {
+          id: 1,
+          question: "What is the capital of France?",
+          options: ["London", "Berlin", "Paris", "Madrid"],
+          correct: "Paris",
+          category: "general"
+        },
+        {
+          id: 2,
+          question: "Which planet is known as the Red Planet?",
+          options: ["Venus", "Mars", "Jupiter", "Saturn"],
+          correct: "Mars",
+          category: "general"
+        }
+      ]
+    };
+    
+    return fallbackQuestions[category] || fallbackQuestions.general;
+  };
+
   const loadQuestions = async () => {
+    setIsLoading(true);
+    setLoadError(false);
+    
     try {
-      const response = await fetch('/quiz.json');
-      const allQuestions = await response.json();
+      // Try to fetch questions from Firestore
+      const result = await getQuizQuestions({ 
+        count: 10, 
+        category: category 
+      });
       
-      // Filter questions by category
-      const categoryQuestions = allQuestions.filter(q => 
-        q.category.toLowerCase() === category.toLowerCase()
-      );
-      
-      // Shuffle and take 10 questions
-      const shuffled = categoryQuestions.sort(() => Math.random() - 0.5);
-      const selected = shuffled.slice(0, 10);
-      
-      setQuestions(selected);
+      if (result.success && result.questions.length > 0) {
+        setQuestions(result.questions);
+        console.log('✅ Loaded questions from database');
+      } else {
+        // Use fallback questions
+        const fallbackQuestions = getFallbackQuestions(category);
+        setQuestions(fallbackQuestions);
+        console.log('⚠️ Using fallback questions for category:', category);
+      }
     } catch (error) {
-      console.error('Error loading questions:', error);
+      console.error('Error loading questions from Firestore:', error);
+      // Use fallback questions on error
+      const fallbackQuestions = getFallbackQuestions(category);
+      setQuestions(fallbackQuestions);
+      console.log('⚠️ Using fallback questions due to error');
+      setLoadError(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -358,7 +479,9 @@ function QuizPage() {
     if (!selectedAnswer) return;
 
     const currentQuestion = questions[currentQuestionIndex];
-    const isCorrect = selectedAnswer === currentQuestion.answer;
+    // Handle both 'answer' and 'correct' field names
+    const correctAnswer = currentQuestion.answer || currentQuestion.correct;
+    const isCorrect = selectedAnswer === correctAnswer;
     
     // Calculate points based on difficulty
     let points = 0;
@@ -399,7 +522,7 @@ function QuizPage() {
           answers: [...answers, {
             question: currentQuestion.question,
             selectedAnswer,
-            correctAnswer: currentQuestion.answer,
+            correctAnswer: correctAnswer,
             isCorrect,
             difficulty: currentQuestion.difficulty,
             points
@@ -415,11 +538,35 @@ function QuizPage() {
     navigate('/');
   };
 
+  if (isLoading) {
+    return (
+      <QuizContainer>
+        <div style={{ textAlign: 'center', color: '#22d3ee', fontSize: '18px' }}>
+          Loading questions...
+        </div>
+      </QuizContainer>
+    );
+  }
+
   if (questions.length === 0) {
     return (
       <QuizContainer>
-        <div style={{ textAlign: 'center', color: '#22d3ee' }}>
-          Loading questions...
+        <div style={{ textAlign: 'center', color: '#ef4444', fontSize: '18px' }}>
+          <p>❌ No questions available for this category.</p>
+          <button 
+            onClick={() => navigate('/')}
+            style={{
+              marginTop: '20px',
+              padding: '10px 20px',
+              backgroundColor: '#22d3ee',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer'
+            }}
+          >
+            Back to Home
+          </button>
         </div>
       </QuizContainer>
     );
@@ -427,6 +574,36 @@ function QuizPage() {
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+  
+
+  
+  // Ensure currentQuestion exists and has required fields
+  if (!currentQuestion) {
+    console.error('❌ Current question is undefined:', { currentQuestionIndex, questionsLength: questions.length });
+    return (
+      <QuizContainer>
+        <div style={{ textAlign: 'center', color: '#ef4444', fontSize: '18px' }}>
+          <p>❌ Error: Question not found.</p>
+          <button 
+            onClick={() => navigate('/')}
+            style={{
+              marginTop: '20px',
+              padding: '10px 20px',
+              backgroundColor: '#22d3ee',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer'
+            }}
+          >
+            Back to Home
+          </button>
+        </div>
+      </QuizContainer>
+    );
+  }
+  
+
 
   return (
     <QuizContainer>
@@ -449,15 +626,15 @@ function QuizPage() {
 
       <QuestionSection className="reveal">
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <DifficultyBadge difficulty={currentQuestion.difficulty}>
-            {currentQuestion.difficulty} • {currentQuestion.difficulty === 'Easy' ? '1' : currentQuestion.difficulty === 'Medium' ? '2' : '3'} Point{currentQuestion.difficulty !== 'Easy' ? 's' : ''}
+          <DifficultyBadge difficulty={currentQuestion.difficulty || 'Medium'}>
+            {currentQuestion.difficulty || 'Medium'} • {(currentQuestion.difficulty || 'Medium') === 'Easy' ? '1' : (currentQuestion.difficulty || 'Medium') === 'Medium' ? '2' : '3'} Point{(currentQuestion.difficulty || 'Medium') !== 'Easy' ? 's' : ''}
           </DifficultyBadge>
         </div>
         
-        <QuestionText>{currentQuestion.question}</QuestionText>
+        <QuestionText>{currentQuestion.question || 'Question text not available'}</QuestionText>
         
         <OptionsGrid>
-          {currentQuestion.options.map((option, index) => (
+          {(currentQuestion.options || []).map((option, index) => (
             <OptionButton
               key={index}
               selected={selectedAnswer === option}

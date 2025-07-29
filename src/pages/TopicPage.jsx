@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -338,6 +338,35 @@ function TopicPage() {
   const urlParams = new URLSearchParams(location.search);
   const category = urlParams.get('category') || 'technology';
 
+  // Debug logging
+  console.log('TopicPage Debug:', {
+    search: location.search,
+    category,
+    emoji: topicEmojis[category],
+    title: topicTitles[category]
+  });
+
+  // Add reveal animation on mount and scroll
+  useEffect(() => {
+    // Reveal animation on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    const elements = document.querySelectorAll('.reveal');
+    elements.forEach(el => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   const handleBack = () => {
     navigate('/');
   };
@@ -351,6 +380,21 @@ function TopicPage() {
       } 
     });
   };
+
+  // If category is not found, show error message
+  if (!topicTitles[category]) {
+    return (
+      <TopicContainer>
+        <div style={{ color: '#22d3ee', textAlign: 'center', padding: '2rem' }}>
+          <h2>Category not found: {category}</h2>
+          <p>Available categories: {Object.keys(topicTitles).join(', ')}</p>
+          <button onClick={handleBack} style={{ marginTop: '1rem', padding: '0.5rem 1rem', background: '#22d3ee', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>
+            Back to Home
+          </button>
+        </div>
+      </TopicContainer>
+    );
+  }
 
   return (
     <TopicContainer>

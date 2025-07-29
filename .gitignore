@@ -25,4 +25,23 @@ pnpm-debug.log*
 
 # Environment variables
 .env
-.env*.local 
+.env*.local
+
+# Security - API Keys and Secrets
+.env.production
+.env.development
+.env.local
+.env.test
+*.key
+*.pem
+secrets.json
+firebase-credentials.json
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db 

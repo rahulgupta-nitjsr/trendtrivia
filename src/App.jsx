@@ -5,7 +5,7 @@ import { GlobalStyles } from './styles/globalStyles';
 import { theme } from './styles/theme';
 import HomePage from './pages/HomePage';
 import TopicPage from './pages/TopicPage';
-import QuizPage from './pages/QuizPage';
+import QuizPageSimple from './pages/QuizPageSimple';
 import ScorePage from './pages/ScorePage';
 import Background from './components/Background';
 
@@ -18,7 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/topic" element={<TopicPage />} />
-          <Route path="/quiz" element={<QuizPage />} />
+          <Route path="/quiz" element={<QuizPageSimple />} />
           <Route path="/score" element={<ScorePage />} />
         </Routes>
       </Router>
