@@ -1,0 +1,375 @@
+/**
+ * Enhanced Local Scheduler Service
+ * Works without Firebase Cloud Functions - uses browser capabilities
+ */
+
+import { generateQuestionsFromFile } from './aiContentService.js';
+import { saveBatch, activateBatch } from './batchService.js';
+import { logApiCall } from './apiLoggingService.js';
+
+/**
+ * Local scheduler state management
+ */
+class LocalSchedulerState {
+  constructor() {
+    this.isGenerating = false;
+    this.lastGeneration = null;
+    this.scheduledJobs = new Map();
+    this.generationHistory = [];
+    this.manualTriggerEnabled = true;
+    this.persistenceKey = 'trendtrivia_scheduler_state';
+    this.loadState();
+  }
+
+  loadState() {
+    try {
+      const saved = localStorage.getItem(this.persistenceKey);
+      if (saved) {
+        const state = JSON.parse(saved);
+        this.lastGeneration = state.lastGeneration ? new Date(state.lastGeneration) : null;
+        this.generationHistory = state.generationHistory || [];
+        this.manualTriggerEnabled = state.manualTriggerEnabled !== false;
+        console.log('📊 Loaded scheduler state from localStorage');
+      }
+    } catch (error) {
+      console.warn('⚠️ Could not load scheduler state:', error);
+    }
+  }
+
+  saveState() {
+    try {
+      const state = {
+        lastGeneration: this.lastGeneration?.toISOString(),
+        generationHistory: this.generationHistory.slice(-10), // Keep last 10
+        manualTriggerEnabled: this.manualTriggerEnabled
+      };
+      localStorage.setItem(this.persistenceKey, JSON.stringify(state));
+    } catch (error) {
+      console.warn('⚠️ Could not save scheduler state:', error);
+    }
+  }
+
+  setGenerating(status) {
+    this.isGenerating = status;
+    console.log(`🔄 Generation status: ${status ? 'ACTIVE' : 'IDLE'}`);
+  }
+
+  recordGeneration(result) {
+    this.lastGeneration = new Date();
+    
+    const generationRecord = {
+      timestamp: this.lastGeneration.toISOString(),
+      success: result.success,
+      batchId: result.batchId,
+      questionCount: result.questions?.length || 0,
+      trigger: result.trigger || 'unknown'
+    };
+    
+    this.generationHistory.push(generationRecord);
+    
+    // Keep only last 10 generations
+    if (this.generationHistory.length > 10) {
+      this.generationHistory = this.generationHistory.slice(-10);
+    }
+    
+    this.saveState();
+    console.log(`📝 Generation recorded: ${result.success ? 'SUCCESS' : 'FAILED'}`);
+  }
+
+  canGenerate() {
+    if (this.isGenerating) {
+      console.log('⚠️ Generation already in progress');
+      return false;
+    }
+
+    // Check if we generated recently (within last 6 hours for local)
+    if (this.lastGeneration) {
+      const lastTime = new Date(this.lastGeneration);
+      const now = new Date();
+      const hoursSinceLastGeneration = (now - lastTime) / (1000 * 60 * 60);
+      
+      if (hoursSinceLastGeneration < 6) {
+        console.log(`⚠️ Recent generation detected (${hoursSinceLastGeneration.toFixed(1)} hours ago)`);
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  getStatus() {
+    return {
+      isGenerating: this.isGenerating,
+      lastGeneration: this.lastGeneration?.toISOString(),
+      generationHistory: this.generationHistory,
+      canGenerate: this.canGenerate(),
+      scheduledJobsCount: this.scheduledJobs.size,
+      manualTriggerEnabled: this.manualTriggerEnabled
+    };
+  }
+}
+
+// Global scheduler state
+const schedulerState = new LocalSchedulerState();
+
+/**
+ * Execute AI content generation with state management
+ */
+export const executeLocalGeneration = async (trigger = 'unknown') => {
+  try {
+    console.log(`🚀 Starting local AI generation (trigger: ${trigger})`);
+    
+    if (!schedulerState.canGenerate()) {
+      return {
+        success: false,
+        error: 'Generation blocked by state management',
+        reason: schedulerState.isGenerating ? 'already_generating' : 'recent_generation'
+      };
+    }
+
+    schedulerState.setGenerating(true);
+
+    // Generate questions
+    const generationResult = await generateQuestionsFromFile({
+      trigger,
+      duplicatePreventionHours: 6 // More lenient for local
+    });
+    
+    if (generationResult.success) {
+      // Save batch to Firestore
+      console.log('💾 Saving batch to Firestore...');
+      const saveResult = await saveBatch(generationResult);
+      
+      if (saveResult.success) {
+        // Activate the new batch
+        console.log('🔄 Activating new batch...');
+        const activateResult = await activateBatch(generationResult.batchId);
+        
+        if (activateResult.success) {
+          console.log('✅ Generation and activation successful');
+          
+          const finalResult = {
+            success: true,
+            batchId: generationResult.batchId,
+            questions: generationResult.questions,
+            metadata: generationResult.metadata,
+            trigger,
+            savedToFirestore: true,
+            activated: true
+          };
+          
+          schedulerState.recordGeneration(finalResult);
+          return finalResult;
+        } else {
+          console.error('❌ Failed to activate batch:', activateResult.error);
+          return {
+            success: false,
+            error: 'Failed to activate batch',
+            details: activateResult
+          };
+        }
+      } else {
+        console.error('❌ Failed to save batch:', saveResult.error);
+        return {
+          success: false,
+          error: 'Failed to save batch',
+          details: saveResult
+        };
+      }
+    } else {
+      console.error('❌ AI generation failed:', generationResult.error);
+      return generationResult;
+    }
+
+  } catch (error) {
+    console.error('❌ Generation execution error:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  } finally {
+    schedulerState.setGenerating(false);
+  }
+};
+
+/**
+ * Calculate next Monday 9AM EST
+ */
+export const getNextMondayAt9AMEST = () => {
+  const now = new Date();
+  
+  // Convert to EST (UTC-5) or EDT (UTC-4) depending on daylight saving
+  const estOffset = -5; // EST is UTC-5
+  const nowEST = new Date(now.getTime() + (estOffset * 60 * 60 * 1000));
+  
+  // Find next Monday
+  const daysUntilMonday = (8 - nowEST.getDay()) % 7 || 7;
+  const nextMonday = new Date(nowEST);
+  nextMonday.setDate(nowEST.getDate() + daysUntilMonday);
+  nextMonday.setHours(9, 0, 0, 0); // 9:00 AM
+  
+  // Convert back to local time
+  const nextMondayLocal = new Date(nextMonday.getTime() - (estOffset * 60 * 60 * 1000));
+  
+  return nextMondayLocal;
+};
+
+/**
+ * Schedule automatic generation for Monday 9AM EST (local)
+ */
+export const scheduleLocalWeeklyGeneration = () => {
+  const nextMonday = getNextMondayAt9AMEST();
+  const now = new Date();
+  const msUntilNextMonday = nextMonday.getTime() - now.getTime();
+  
+  console.log(`📅 Scheduling next local generation for: ${nextMonday.toLocaleString()}`);
+  console.log(`⏰ Time until next generation: ${Math.round(msUntilNextMonday / (1000 * 60 * 60))} hours`);
+  
+  // Clear existing scheduled job if any
+  if (schedulerState.scheduledJobs.has('weekly')) {
+    clearTimeout(schedulerState.scheduledJobs.get('weekly'));
+  }
+  
+  // Schedule the job
+  const timeoutId = setTimeout(async () => {
+    console.log('📅 Executing scheduled weekly generation...');
+    const result = await executeLocalGeneration('scheduled_weekly');
+    
+    if (result.success) {
+      console.log('✅ Scheduled generation completed successfully');
+    } else {
+      console.error('❌ Scheduled generation failed:', result.error);
+    }
+    
+    // Schedule next week
+    scheduleLocalWeeklyGeneration();
+    
+  }, msUntilNextMonday);
+  
+  schedulerState.scheduledJobs.set('weekly', timeoutId);
+  
+  return {
+    success: true,
+    nextExecution: nextMonday.toISOString(),
+    msUntilExecution: msUntilNextMonday
+  };
+};
+
+/**
+ * Manual trigger for AI generation
+ */
+export const triggerLocalManualGeneration = async () => {
+  console.log('🔄 Manual generation triggered');
+  
+  if (!schedulerState.manualTriggerEnabled) {
+    return {
+      success: false,
+      error: 'Manual trigger is disabled'
+    };
+  }
+  
+  return await executeLocalGeneration('manual');
+};
+
+/**
+ * Enable/disable manual trigger
+ */
+export const setLocalManualTriggerEnabled = (enabled) => {
+  schedulerState.manualTriggerEnabled = enabled;
+  schedulerState.saveState();
+  console.log(`🎛️ Manual trigger ${enabled ? 'enabled' : 'disabled'}`);
+};
+
+/**
+ * Get scheduler status
+ */
+export const getLocalSchedulerStatus = () => {
+  const nextMonday = getNextMondayAt9AMEST();
+  const now = new Date();
+  const msUntilNextMonday = nextMonday.getTime() - now.getTime();
+  
+  return {
+    ...schedulerState.getStatus(),
+    nextScheduledGeneration: nextMonday.toISOString(),
+    msUntilNextGeneration: msUntilNextMonday,
+    hoursUntilNextGeneration: Math.round(msUntilNextMonday / (1000 * 60 * 60)),
+    manualTriggerEnabled: schedulerState.manualTriggerEnabled,
+    type: 'local_scheduler'
+  };
+};
+
+/**
+ * Initialize local scheduler
+ */
+export const initializeLocalScheduler = () => {
+  console.log('🚀 Initializing enhanced local scheduler...');
+  
+  // Schedule weekly generation
+  const scheduleResult = scheduleLocalWeeklyGeneration();
+  
+  // Make manual trigger available globally
+  if (typeof window !== 'undefined') {
+    window.triggerLocalManualGeneration = triggerLocalManualGeneration;
+    window.getLocalSchedulerStatus = getLocalSchedulerStatus;
+    window.executeLocalGeneration = executeLocalGeneration;
+    window.setLocalManualTriggerEnabled = setLocalManualTriggerEnabled;
+    window.testLocalScheduler = testLocalScheduler;
+  }
+  
+  console.log('✅ Enhanced local scheduler initialized');
+  console.log(`📅 Next generation: ${scheduleResult.nextExecution}`);
+  
+  return scheduleResult;
+};
+
+/**
+ * Test local scheduler functionality
+ */
+export const testLocalScheduler = async () => {
+  try {
+    console.log('🧪 Testing local scheduler functionality...');
+    
+    const results = {
+      statusCheck: false,
+      stateManagement: false,
+      timeCalculation: false,
+      manualTrigger: false
+    };
+    
+    // Test 1: Status check
+    const status = getLocalSchedulerStatus();
+    results.statusCheck = status && typeof status.isGenerating === 'boolean';
+    console.log(`✅ Status check: ${results.statusCheck ? 'PASSED' : 'FAILED'}`);
+    
+    // Test 2: State management
+    const canGenerate = schedulerState.canGenerate();
+    results.stateManagement = typeof canGenerate === 'boolean';
+    console.log(`✅ State management: ${results.stateManagement ? 'PASSED' : 'FAILED'}`);
+    
+    // Test 3: Time calculation
+    const nextMonday = getNextMondayAt9AMEST();
+    results.timeCalculation = nextMonday instanceof Date && nextMonday > new Date();
+    console.log(`✅ Time calculation: ${results.timeCalculation ? 'PASSED' : 'FAILED'}`);
+    
+    // Test 4: Manual trigger availability
+    results.manualTrigger = typeof triggerLocalManualGeneration === 'function';
+    console.log(`✅ Manual trigger: ${results.manualTrigger ? 'PASSED' : 'FAILED'}`);
+    
+    const allTestsPassed = Object.values(results).every(result => result === true);
+    
+    console.log(`🧪 Local scheduler test: ${allTestsPassed ? 'PASSED' : 'FAILED'}`);
+    
+    return {
+      success: allTestsPassed,
+      results,
+      status
+    };
+    
+  } catch (error) {
+    console.error('❌ Local scheduler test error:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}; 
