@@ -28,39 +28,42 @@ export const getQuizQuestions = async (options = {}) => {
       count = 10,
       category = null,
       difficulty = null,
+      timeframe = null,
       preferLatestBatch = true
     } = options;
     
-    console.log(`🔍 Fetching ${count} quiz questions (category: ${category}, difficulty: ${difficulty})`);
+    console.log(`🔍 Fetching ${count} quiz questions (category: ${category}, difficulty: ${difficulty}, timeframe: ${timeframe})`);
     
     let result;
     let source = 'unknown';
     
     if (preferLatestBatch) {
-      // Try to get questions from the latest active batch first
-      console.log('🔄 Attempting to get questions from latest batch...');
-      result = await getQuestionsFromLatestBatch(count, { category });
+      // Try to get questions from the latest active batch first (with timeframe filter)
+      console.log(`🔄 Attempting to get questions from latest batch${timeframe ? ` for timeframe: ${timeframe}` : ''}...`);
+      result = await getQuestionsFromLatestBatch(count, { category, timeframe });
       
       if (result.success && result.questions.length > 0) {
-        source = 'latest_batch';
-        console.log(`✅ Got ${result.questions.length} questions from latest batch`);
+        source = timeframe ? `latest_batch_${timeframe}` : 'latest_batch';
+        console.log(`✅ Got ${result.questions.length} questions from latest batch${timeframe ? ` (${timeframe})` : ''}`);
       } else {
         console.log('⚠️ No questions from latest batch, falling back to active questions');
         result = await getActiveQuestions({ 
           category, 
           difficulty, 
+          timeframe,
           limit: count 
         });
-        source = 'active_questions_fallback';
+        source = timeframe ? `active_questions_fallback_${timeframe}` : 'active_questions_fallback';
       }
     } else {
       // Directly get active questions
       result = await getActiveQuestions({ 
         category, 
         difficulty, 
+        timeframe,
         limit: count 
       });
-      source = 'active_questions';
+      source = timeframe ? `active_questions_${timeframe}` : 'active_questions';
     }
     
     if (!result.success || result.questions.length === 0) {
@@ -90,6 +93,7 @@ export const getQuizQuestions = async (options = {}) => {
         actualCount: enhancedQuestions.length,
         category,
         difficulty,
+        timeframe,
         fetchedAt: new Date().toISOString()
       }
     };

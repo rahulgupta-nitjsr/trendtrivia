@@ -3,8 +3,8 @@
  * Works without Firebase Cloud Functions - uses browser capabilities
  */
 
-import { generateQuestionsFromFile } from './aiContentService.js';
-import { saveBatch, activateBatch } from './batchService.js';
+import { generateQuestionsFromFile, generateQuestionsForTimeframe } from './aiContentService.js';
+import { saveBatch, activateBatch, activateBatchForTimeframe } from './batchService.js';
 import { logApiCall } from './apiLoggingService.js';
 
 /**
@@ -82,19 +82,23 @@ class LocalSchedulerState {
       return false;
     }
 
-    // Check if we generated recently (within last 6 hours for local)
-    if (this.lastGeneration) {
-      const lastTime = new Date(this.lastGeneration);
-      const now = new Date();
-      const hoursSinceLastGeneration = (now - lastTime) / (1000 * 60 * 60);
-      
-      if (hoursSinceLastGeneration < 6) {
-        console.log(`⚠️ Recent generation detected (${hoursSinceLastGeneration.toFixed(1)} hours ago)`);
-        return false;
-      }
-    }
-
+    // Rate limiting temporarily disabled for testing
+    console.log('🔧 Rate limiting disabled for testing - allowing generation');
     return true;
+    
+    // Original rate limiting code (commented out for testing)
+    // Check if we generated recently (within last 6 hours for local)
+    // if (this.lastGeneration) {
+    //   const lastTime = new Date(this.lastGeneration);
+    //   const now = new Date();
+    //   const hoursSinceLastGeneration = (now - lastTime) / (1000 * 60 * 60);
+    //   
+    //   if (hoursSinceLastGeneration < 6) {
+    //     console.log(`⚠️ Recent generation detected (${hoursSinceLastGeneration.toFixed(1)} hours ago)`);
+    //     return false;
+    //   }
+    // }
+    // return true;
   }
 
   getStatus() {
@@ -151,6 +155,87 @@ export const executeLocalGeneration = async (trigger = 'unknown') => {
           const finalResult = {
             success: true,
             batchId: generationResult.batchId,
+            questions: generationResult.questions,
+            metadata: generationResult.metadata,
+            trigger,
+            savedToFirestore: true,
+            activated: true
+          };
+          
+          schedulerState.recordGeneration(finalResult);
+          return finalResult;
+        } else {
+          console.error('❌ Failed to activate batch:', activateResult.error);
+          return {
+            success: false,
+            error: 'Failed to activate batch',
+            details: activateResult
+          };
+        }
+      } else {
+        console.error('❌ Failed to save batch:', saveResult.error);
+        return {
+          success: false,
+          error: 'Failed to save batch',
+          details: saveResult
+        };
+      }
+    } else {
+      console.error('❌ AI generation failed:', generationResult.error);
+      return generationResult;
+    }
+
+  } catch (error) {
+    console.error('❌ Generation execution error:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  } finally {
+    schedulerState.setGenerating(false);
+  }
+};
+
+/**
+ * Execute local generation for specific timeframe
+ */
+export const executeLocalGenerationForTimeframe = async (timeframe, trigger = 'unknown') => {
+  try {
+    console.log(`🚀 Starting local AI generation for timeframe: ${timeframe} (trigger: ${trigger})`);
+    
+    if (!schedulerState.canGenerate()) {
+      return {
+        success: false,
+        error: 'Generation blocked by state management',
+        reason: schedulerState.isGenerating ? 'already_generating' : 'recent_generation'
+      };
+    }
+
+    schedulerState.setGenerating(true);
+
+    // Generate questions for specific timeframe
+    const generationResult = await generateQuestionsForTimeframe(timeframe, {
+      trigger,
+      duplicatePreventionHours: 6 // More lenient for local
+    });
+    
+    if (generationResult.success) {
+      // Save batch to Firestore
+      console.log('💾 Saving batch to Firestore...');
+      const saveResult = await saveBatch(generationResult);
+      
+      if (saveResult.success) {
+        // Activate the new batch for this timeframe
+        console.log(`🔄 Activating new batch for timeframe: ${timeframe}...`);
+        const activateResult = await activateBatchForTimeframe(generationResult.batchId, timeframe);
+        
+        if (activateResult.success) {
+          console.log('✅ Generation and activation successful');
+          
+          const finalResult = {
+            success: true,
+            batchId: generationResult.batchId,
+            timeframe,
             questions: generationResult.questions,
             metadata: generationResult.metadata,
             trigger,
@@ -272,6 +357,30 @@ export const triggerLocalManualGeneration = async () => {
 };
 
 /**
+ * Trigger manual generation for specific timeframe
+ */
+export const triggerLocalManualGenerationForTimeframe = async (timeframe) => {
+  console.log(`🔄 Manual generation triggered for timeframe: ${timeframe}`);
+  
+  if (!schedulerState.manualTriggerEnabled) {
+    return {
+      success: false,
+      error: 'Manual trigger is disabled'
+    };
+  }
+  
+  const validTimeframes = ['last_week', 'last_month', 'last_year'];
+  if (!validTimeframes.includes(timeframe)) {
+    return {
+      success: false,
+      error: `Invalid timeframe: ${timeframe}. Valid options: ${validTimeframes.join(', ')}`
+    };
+  }
+  
+  return await executeLocalGenerationForTimeframe(timeframe, 'manual');
+};
+
+/**
  * Enable/disable manual trigger
  */
 export const setLocalManualTriggerEnabled = (enabled) => {
@@ -310,10 +419,17 @@ export const initializeLocalScheduler = () => {
   // Make manual trigger available globally
   if (typeof window !== 'undefined') {
     window.triggerLocalManualGeneration = triggerLocalManualGeneration;
+    window.triggerLocalManualGenerationForTimeframe = triggerLocalManualGenerationForTimeframe;
+    window.executeLocalGenerationForTimeframe = executeLocalGenerationForTimeframe;
     window.getLocalSchedulerStatus = getLocalSchedulerStatus;
     window.executeLocalGeneration = executeLocalGeneration;
     window.setLocalManualTriggerEnabled = setLocalManualTriggerEnabled;
     window.testLocalScheduler = testLocalScheduler;
+    
+    // Convenience functions for specific timeframes
+    window.generateLastWeekQuestions = () => triggerLocalManualGenerationForTimeframe('last_week');
+    window.generateLastMonthQuestions = () => triggerLocalManualGenerationForTimeframe('last_month');
+    window.generateLastYearQuestions = () => triggerLocalManualGenerationForTimeframe('last_year');
   }
   
   console.log('✅ Enhanced local scheduler initialized');

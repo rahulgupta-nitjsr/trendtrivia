@@ -4,16 +4,17 @@
  */
 
 import { aiConfig } from '../config/aiConfig.js';
-import { getValidatedPrompt } from './promptFileService.js';
+import { getValidatedPrompt, getValidTimeframes } from './promptFileService.js';
 import { logApiCall, checkRecentCalls } from './apiLoggingService.js';
 
 /**
- * Generate a unique batch ID with timestamp
+ * Generate a unique batch ID with timestamp and timeframe
  */
-export const generateBatchId = () => {
+export const generateBatchId = (timeframe = 'default') => {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const random = Math.random().toString(36).substring(2, 8);
-  return `batch-${timestamp}-${random}`;
+  const timeframeSuffix = timeframe !== 'default' ? `-${timeframe}` : '';
+  return `batch-${timestamp}${timeframeSuffix}-${random}`;
 };
 
 /**
@@ -351,12 +352,14 @@ export const parseAIResponse = (aiResponse) => {
  * Enhanced question generation with duplicate prevention and logging
  */
 export const generateQuestionsFromFile = async (options = {}) => {
-  const batchId = generateBatchId();
   const {
+    timeframe = 'default',
     forcereGenerate = false,
     duplicatePreventionHours = 1,
     trigger = 'unknown'
   } = options;
+  
+  const batchId = generateBatchId(timeframe);
   
   try {
     console.log(`🚀 Starting enhanced AI question generation (Batch: ${batchId})...`);
@@ -386,9 +389,9 @@ export const generateQuestionsFromFile = async (options = {}) => {
       }
     }
     
-    // Get validated prompt
-    const promptContent = await getValidatedPrompt();
-    console.log(`📝 Using prompt (${promptContent.length} characters)`);
+    // Get validated prompt for specific timeframe
+    const promptContent = await getValidatedPrompt(timeframe);
+    console.log(`📝 Using prompt (${promptContent.length} characters) for timeframe: ${timeframe}`);
     
     // Make AI API call with logging
     const aiResponse = await callPerplexityAI(promptContent, {
@@ -415,6 +418,7 @@ export const generateQuestionsFromFile = async (options = {}) => {
     // Create batch metadata
     const batchMetadata = {
       batchId,
+      timeframe,
       generatedAt: new Date().toISOString(),
       promptLength: promptContent.length,
       aiResponseLength: aiResponse.length,
@@ -424,7 +428,8 @@ export const generateQuestionsFromFile = async (options = {}) => {
       status: 'generated',
       trigger,
       duplicatePreventionHours,
-      forcereGenerate
+      forcereGenerate,
+      isActive: false // Will be activated by batch service
     };
     
     console.log(`✅ Successfully generated ${parseResult.validQuestions.length} questions`);
@@ -581,6 +586,36 @@ export const testPerplexityConnection = async () => {
       message: 'Perplexity connection test failed'
     };
   }
+};
+
+/**
+ * Generate questions for a specific timeframe
+ * @param {string} timeframe - The timeframe ('last_week', 'last_month', 'last_year')
+ * @param {Object} options - Additional options
+ * @returns {Promise<Object>} Generation result
+ */
+export const generateQuestionsForTimeframe = async (timeframe, options = {}) => {
+  // Validate timeframe
+  const validTimeframes = getValidTimeframes();
+  if (!validTimeframes.includes(timeframe)) {
+    throw new Error(`Invalid timeframe: ${timeframe}. Valid options: ${validTimeframes.join(', ')}`);
+  }
+
+  console.log(`🕒 Generating questions for timeframe: ${timeframe}`);
+  
+  return await generateQuestionsFromFile({
+    ...options,
+    timeframe,
+    trigger: options.trigger || `timeframe_${timeframe}`
+  });
+};
+
+/**
+ * Get available timeframes
+ * @returns {Array<string>} List of available timeframes
+ */
+export const getAvailableTimeframes = () => {
+  return getValidTimeframes();
 };
 
 // LEGACY FUNCTIONS (marked as deprecated)

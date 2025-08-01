@@ -190,16 +190,16 @@ export const getActiveQuestions = async (options = {}) => {
  */
 export const getQuestionsFromLatestBatch = async (count = 10, options = {}) => {
   try {
-    const { category = null } = options;
-    console.log(`🔍 Fetching ${count} questions from latest active batch (category: ${category})`);
+    const { category = null, timeframe = null } = options;
+    console.log(`🔍 Fetching ${count} questions from latest active batch (category: ${category}, timeframe: ${timeframe})`);
     
-    // First, get the latest active batch directly
+    // First, get the latest active batch directly (with timeframe filter)
     const { getLatestActiveBatch } = await import('./batchService.js');
-    const latestBatch = await getLatestActiveBatch();
+    const latestBatch = await getLatestActiveBatch(timeframe);
     
     if (!latestBatch || !latestBatch.questions || latestBatch.questions.length === 0) {
-      console.log('⚠️ No active batch found or batch has no questions');
-      return await getActiveQuestions({ category, limit: count });
+      console.log(`⚠️ No active batch found${timeframe ? ` for timeframe: ${timeframe}` : ''} or batch has no questions`);
+      return await getActiveQuestions({ category, timeframe, limit: count });
     }
     
     console.log(`📦 Found active batch: ${latestBatch.batchId} with ${latestBatch.questions.length} questions`);
@@ -215,7 +215,7 @@ export const getQuestionsFromLatestBatch = async (count = 10, options = {}) => {
     
     if (availableQuestions.length === 0) {
       console.log(`⚠️ No questions found for category: ${category}, falling back to active questions`);
-      return await getActiveQuestions({ category, limit: count });
+      return await getActiveQuestions({ category, timeframe, limit: count });
     }
     
     // Take the requested number of questions
@@ -245,7 +245,7 @@ export const getQuestionsFromLatestBatch = async (count = 10, options = {}) => {
     
     // Fallback to any active questions
     console.log('🔄 Falling back to active questions from database...');
-    return await getActiveQuestions({ category: options.category, limit: count });
+    return await getActiveQuestions({ category: options.category, timeframe: options.timeframe, limit: count });
   }
 };
 

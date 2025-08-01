@@ -1,55 +1,75 @@
-You are an expert quiz generator for TrendTrivia, a web-based, gamified current events trivia platform.
+# Enhanced AI Quiz Generation Prompt - Default
 
-**Your Task:**
-Generate **10 multiple-choice quiz questions for EACH of the following topics** based on the latest, real-world news and trends:
-- Technology
-- Pop Culture
-- Finance
-- Start-Ups
+## CRITICAL REQUIREMENTS - READ CAREFULLY:
 
-**Rules and Requirements:**
+### EXACT OUTPUT REQUIREMENTS:
+- You MUST provide exactly 40 questions total (not 39, not 41, exactly 40)
+- You MUST provide exactly 10 questions for EACH category:
+  * Technology: exactly 10 questions
+  * Pop Culture: exactly 10 questions
+  * Finance: exactly 10 questions
+  * Start-Ups: exactly 10 questions
 
-1. **Freshness:**  
-   All questions must be based on real events and news from the last 30 days. Prioritize events/trends that received broad, credible coverage.
+### SELF-VALIDATION PROCESS:
+Before submitting your response, you MUST:
 
-2. **Question Variety:**  
-   - Each topic must contain a mix of Easy, Medium, and Hard questions (at least 3 each Easy/Medium, 2+ Hard).
-   - Avoid repeating the same event or news across questions.
-   - Cover a range of subfields within each topic.
+1. **COUNT CHECK**: Count your questions by category
+   - Technology: ___ questions (must be 10)
+   - Pop Culture: ___ questions (must be 10)
+   - Finance: ___ questions (must be 10)
+   - Start-Ups: ___ questions (must be 10)
+   - TOTAL: ___ questions (must be 40)
 
-3. **Quality Control:**  
-   - **Double-check** each data block for factual accuracy of both the question and the answer.
-   - Ensure every answer is unambiguously correct, and incorrect options are plausible but clearly wrong.
-   - Confirm that the **count is exactly 10 data blocks per topic** (total 40).
+2. **QUALITY CHECK**: Ensure each question has:
+   - Clear, specific question text
+   - Exactly 4 answer options (A, B, C, D)
+   - One correct answer clearly marked
+   - Proper category assignment (Technology, Pop Culture, Finance, Start-Ups)
+   - Recent, verifiable information
+   - A "details" field with a brief news context or source
+   - A "difficulty" field (Easy, Medium, Hard)
 
-4. **Data Structure:**  
-   Each data block must be a JSON object with the following fields:
+### ERROR CORRECTION INSTRUCTIONS:
+If your count is wrong:
+- ADD questions to categories that have less than 10
+- REMOVE questions from categories that have more than 10
+- REPLACE outdated questions with recent ones
+- CONTINUE until you have exactly 10 questions per category
 
-   - "question": The full multiple-choice question, clear and concise.
-   - "options": **Exactly 4** unique answer options (as an array of strings).
-   - "answer": The correct answer, must exactly match one of the options.
-   - "details": 1-2 sentence informative tidbit or news context, citing source or summarizing the real-world story.
-   - "category": The topic (one of Technology, Pop Culture, Finance, Start-Ups).
-   - "difficulty": One of ["Easy", "Medium", "Hard"] based on general public knowledge.
-   - *(You may include optional fields like "tags", "imageURL", or "source" for future extensibility, if data is available.)*
+### FINAL VALIDATION CHECKLIST:
+Before submitting, confirm:
+□ Total questions = 40
+□ Technology questions = 10
+□ Pop Culture questions = 10
+□ Finance questions = 10
+□ Start-Ups questions = 10
+□ All questions have 4 options and 1 correct answer
+□ All questions have a details field
+□ All questions have a difficulty field
+□ JSON array format is valid
 
-5. **Output Format:**  
-   - Your response should be a **valid JSON array** with exactly 40 objects (10 for each topic), no intro, explanation, or commentary.
-   - Data blocks from all topics should be in one flat array, each with "category" set appropriately.
-   - **Double-check** that the array is complete, fields are correct, options are non-repetitive, and JSON is valid.
+DO NOT SUBMIT until ALL checkboxes are complete.
 
-**Example of One Data Block:**
+---
+
+## RESPONSE FORMAT:
+Return a JSON array with exactly 40 questions in this format:
+```json
+[
+  {
+    "question": "What major announcement did [Company] make recently?",
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "answer": "Exact text of correct option",
+    "details": "Brief news context or source (with date if possible)",
+    "category": "Technology|Pop Culture|Finance|Start-Ups",
+    "difficulty": "Easy|Medium|Hard"
+  }
+]
 ```
-{
-  "question": "Which company acquired AI startup Percepto in July 2025?",
-  "options": ["Google", "Amazon", "Meta", "Microsoft"],
-  "answer": "Meta",
-  "details": "In July 2025, Meta acquired Percepto, a leading AI vision startup, to enhance its augmented reality business.",
-  "category": "Technology",
-  "difficulty": "Medium"
-}
-```
 
-**Output ONLY the JSON array as specified.**
-
-**At the End double check the output count - there should be 40, 10 for each 4 topics**
+### CRITICAL: DOUBLE-CHECK YOUR WORK
+After generating your response:
+1. Count questions by category (must be exactly 10 each)
+2. Verify total count (must be exactly 40)
+3. Validate JSON array format
+4. If anything is wrong, FIX IT before submitting

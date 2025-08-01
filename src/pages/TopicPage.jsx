@@ -192,6 +192,10 @@ const DurationCard = styled.button`
   justify-content: center;
   gap: ${({ theme }) => theme.spacing.small};
   
+  /* Ensure visibility - override any reveal animation */
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  
   background: ${({ selected, theme }) => 
     selected 
       ? 'linear-gradient(135deg, rgba(34, 211, 238, 0.3) 0%, rgba(34, 211, 238, 0.2) 100%)'
@@ -361,7 +365,8 @@ function TopicPage() {
       rootMargin: '0px 0px -50px 0px'
     });
 
-    const elements = document.querySelectorAll('.reveal');
+    // Only observe elements with 'reveal' class, excluding duration cards
+    const elements = document.querySelectorAll('.reveal:not(.duration-card)');
     elements.forEach(el => observer.observe(el));
 
     return () => observer.disconnect();
@@ -442,7 +447,6 @@ function TopicPage() {
               key={duration.id}
               selected={selectedDuration === duration.id}
               onClick={() => setSelectedDuration(duration.id)}
-              className="reveal"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <DurationIcon>{duration.icon}</DurationIcon>

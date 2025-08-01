@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendTrivia Database Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .batch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .batch-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .batch-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .batch-card.expanded {
+            border-color: #667eea;
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+        }
+
+        .batch-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .batch-id {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #666;
+            background: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .batch-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .batch-info {
+            margin-bottom: 15px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .timeframe-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .timeframe-last_week {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .timeframe-last_month {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .timeframe-last_year {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .questions-preview {
+            margin-top: 15px;
+        }
+
+        .questions-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .expand-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .expand-btn:hover {
+            background: #5a6fd8;
+        }
+
+        .question-item {
+            background: #f8f9fa;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .question-text {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .question-meta {
+            color: #666;
+            font-size: 0.75rem;
+        }
+
+        .question-options {
+            margin-top: 8px;
+            padding-left: 15px;
+        }
+
+        .option-item {
+            color: #666;
+            font-size: 0.75rem;
+            margin-bottom: 2px;
+        }
+
+        .correct-answer {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .all-questions {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .all-questions.expanded {
+            max-height: none;
+            margin-top: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #5a6fd8;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .question-counter {
+            color: #667eea;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 TrendTrivia Database Viewer</h1>
+            <p>View your batches and questions in a user-friendly format</p>
+        </div>
+
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="total-batches">-</div>
+                <div class="stat-label">Active Batches</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="total-questions">-</div>
+                <div class="stat-label">Total Questions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="timeframes">-</div>
+                <div class="stat-label">Timeframes</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <button class="refresh-btn" onclick="loadData()">🔄 Refresh Data</button>
+            
+            <div class="section">
+                <h2 class="section-title">📦 Active Batches</h2>
+                <div id="batches-container">
+                    <div class="loading">Loading batches...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDVyprppusbfBjgYYEuQvpJ_VBJ4B6WDz8",
+            authDomain: "trendtrivia-9019c.firebaseapp.com",
+            projectId: "trendtrivia-9019c",
+            storageBucket: "trendtrivia-9019c.firebasestorage.app",
+            messagingSenderId: "768402507273",
+            appId: "1:768402507273:web:fd80000defb6e3c2bd1ad8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Store batches data globally
+        let batchesData = [];
+
+        window.loadData = async function() {
+            try {
+                console.log('🔍 Loading Firebase data...');
+                
+                // Get active batches
+                const batchesRef = collection(db, 'batches');
+                const batchesQuery = query(batchesRef, where('isActive', '==', true));
+                const batchesSnapshot = await getDocs(batchesQuery);
+                
+                batchesData = [];
+                let totalQuestions = 0;
+                const timeframes = new Set();
+                
+                batchesSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    const batch = {
+                        id: doc.id,
+                        ...data,
+                        createdAt: data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString() : 'N/A'
+                    };
+                    batchesData.push(batch);
+                    
+                    if (data.questions) {
+                        totalQuestions += data.questions.length;
+                    }
+                    
+                    if (data.timeframe) {
+                        timeframes.add(data.timeframe);
+                    }
+                });
+                
+                // Update stats
+                document.getElementById('total-batches').textContent = batchesData.length;
+                document.getElementById('total-questions').textContent = totalQuestions;
+                document.getElementById('timeframes').textContent = timeframes.size;
+                
+                // Render batches
+                renderBatches();
+                
+                console.log('✅ Data loaded successfully');
+                
+            } catch (error) {
+                console.error('❌ Error loading data:', error);
+                document.getElementById('batches-container').innerHTML = `
+                    <div class="error">
+                        Error loading data: ${error.message}
+                    </div>
+                `;
+            }
+        };
+
+        function renderBatches() {
+            const batchesContainer = document.getElementById('batches-container');
+            
+            if (batchesData.length === 0) {
+                batchesContainer.innerHTML = '<div class="no-data">No active batches found</div>';
+                return;
+            }
+            
+            batchesContainer.innerHTML = `
+                <div class="batch-grid">
+                    ${batchesData.map((batch, index) => `
+                        <div class="batch-card" data-batch-index="${index}">
+                            <div class="batch-header">
+                                <div class="batch-id">${batch.id.substring(0, 8)}...</div>
+                                <div class="batch-status status-active">Active</div>
+                            </div>
+                            
+                            <div class="batch-info">
+                                <div class="info-row">
+                                    <span class="info-label">Timeframe:</span>
+                                    <span class="timeframe-badge timeframe-${batch.timeframe || 'unknown'}">
+                                        ${batch.timeframe || 'N/A'}
+                                    </span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Created:</span>
+                                    <span class="info-value">${batch.createdAt}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Questions:</span>
+                                    <span class="info-value">${batch.questions ? batch.questions.length : 0}</span>
+                                </div>
+                            </div>
+                            
+                            ${batch.questions && batch.questions.length > 0 ? `
+                                <div class="questions-preview">
+                                    <div class="questions-title">
+                                        <span>Sample Questions:</span>
+                                        <button class="expand-btn" onclick="toggleQuestions(${index})">
+                                            Show All (${batch.questions.length})
+                                        </button>
+                                    </div>
+                                    ${batch.questions.slice(0, 3).map(q => `
+                                        <div class="question-item">
+                                            <div class="question-text">${q.question}</div>
+                                            <div class="question-meta">
+                                                Category: ${q.category || 'N/A'} | 
+                                                Difficulty: ${q.difficulty || 'N/A'}
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                    ${batch.questions.length > 3 ? `
+                                        <div class="question-item" style="text-align: center; color: #666; font-style: italic;">
+                                            ... and ${batch.questions.length - 3} more questions
+                                        </div>
+                                    ` : ''}
+                                    
+                                    <div class="all-questions" id="all-questions-${index}">
+                                        ${batch.questions.map((q, qIndex) => `
+                                            <div class="question-item">
+                                                <div class="question-text">
+                                                    <strong>${qIndex + 1}.</strong> ${q.question}
+                                                </div>
+                                                <div class="question-meta">
+                                                    Category: ${q.category || 'N/A'} | 
+                                                    Difficulty: ${q.difficulty || 'N/A'}
+                                                </div>
+                                                ${q.options ? `
+                                                    <div class="question-options">
+                                                        ${q.options.map((option, optIndex) => `
+                                                            <div class="option-item ${option === q.answer ? 'correct-answer' : ''}">
+                                                                ${String.fromCharCode(65 + optIndex)}. ${option}
+                                                            </div>
+                                                        `).join('')}
+                                                    </div>
+                                                ` : ''}
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        window.toggleQuestions = function(batchIndex) {
+            const allQuestionsDiv = document.getElementById(`all-questions-${batchIndex}`);
+            const batchCard = document.querySelector(`[data-batch-index="${batchIndex}"]`);
+            const expandBtn = batchCard.querySelector('.expand-btn');
+            
+            if (allQuestionsDiv.classList.contains('expanded')) {
+                // Collapse
+                allQuestionsDiv.classList.remove('expanded');
+                batchCard.classList.remove('expanded');
+                expandBtn.textContent = `Show All (${batchesData[batchIndex].questions.length})`;
+            } else {
+                // Expand
+                allQuestionsDiv.classList.add('expanded');
+                batchCard.classList.add('expanded');
+                expandBtn.textContent = 'Hide All';
+            }
+        };
+
+        // Load data on page load
+        loadData();
+    </script>
+</body>
+</html> 

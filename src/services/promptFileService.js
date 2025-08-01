@@ -1,20 +1,45 @@
 /**
- * Prompt File Service
- * Handles reading AI prompts from markdown files dynamically
+ * Enhanced Prompt File Service
+ * Handles reading AI prompts from markdown files dynamically with timeframe support
  */
 
 /**
- * Read prompt from the ai_generation_prompt.md file
+ * Timeframe to prompt file mapping
+ */
+const TIMEFRAME_PROMPTS = {
+  'last_week': '/ai_components/prompts/last_week_prompt.md',
+  'last_month': '/ai_components/prompts/last_month_prompt.md',
+  'last_year': '/ai_components/prompts/last_year_prompt.md',
+  'default': '/ai_components/ai_generation_prompt.md' // Legacy fallback
+};
+
+/**
+ * Get valid timeframes
+ * @returns {Array<string>} List of valid timeframes
+ */
+export const getValidTimeframes = () => {
+  return Object.keys(TIMEFRAME_PROMPTS).filter(key => key !== 'default');
+};
+
+/**
+ * Read prompt from timeframe-specific file
+ * @param {string} timeframe - The timeframe ('last_week', 'last_month', 'last_year')
  * @returns {Promise<string>} The prompt content
  */
-export const readPromptFromFile = async () => {
+export const readPromptFromFile = async (timeframe = 'default') => {
   try {
-    console.log('📖 Reading prompt from ai_components/ai_generation_prompt.md...');
+    const promptPath = TIMEFRAME_PROMPTS[timeframe] || TIMEFRAME_PROMPTS.default;
+    console.log(`📖 Reading prompt from ${promptPath} (timeframe: ${timeframe})...`);
     
     // In a browser environment, we need to fetch the file
-    const response = await fetch('/ai_components/ai_generation_prompt.md');
+    const response = await fetch(promptPath);
     
     if (!response.ok) {
+      // Fallback to default if timeframe-specific file fails
+      if (timeframe !== 'default') {
+        console.warn(`⚠️ Failed to load ${timeframe} prompt, falling back to default`);
+        return await readPromptFromFile('default');
+      }
       throw new Error(`Failed to fetch prompt file: ${response.status} ${response.statusText}`);
     }
     
@@ -26,6 +51,7 @@ export const readPromptFromFile = async () => {
     
     console.log('✅ Successfully read prompt file');
     console.log(`📝 Prompt length: ${promptContent.length} characters`);
+    console.log(`🕒 Timeframe: ${timeframe}`);
     
     return promptContent.trim();
     
@@ -41,7 +67,7 @@ Generate 10 multiple-choice quiz questions for EACH of the following topics base
 - Finance
 - Start-Ups
 
-Each question must be a JSON object with: question, options (4 choices), answer, details, category, difficulty.
+Each question must be a JSON object with: question, options (4 choices), answer, details, category, difficulty, timeframe.
 
 Return ONLY a valid JSON array with exactly 40 objects (10 per topic).`;
 
@@ -74,7 +100,7 @@ export const validatePrompt = (prompt) => {
     return result;
   }
   
-  // Check for required topics
+  // Check for required topics (updated to match enhanced prompts)
   const requiredTopics = ['Technology', 'Pop Culture', 'Finance', 'Start-Ups'];
   const missingTopics = requiredTopics.filter(topic => 
     !prompt.includes(topic)
@@ -146,12 +172,13 @@ export const validatePrompt = (prompt) => {
 };
 
 /**
- * Get validated prompt content
+ * Get validated prompt content for specific timeframe
+ * @param {string} timeframe - The timeframe ('last_week', 'last_month', 'last_year')
  * @returns {Promise<string>} Validated prompt content
  */
-export const getValidatedPrompt = async () => {
+export const getValidatedPrompt = async (timeframe = 'default') => {
   try {
-    const prompt = await readPromptFromFile();
+    const prompt = await readPromptFromFile(timeframe);
     
     const validationResult = validatePrompt(prompt);
     if (!validationResult.isValid) {
@@ -164,6 +191,15 @@ export const getValidatedPrompt = async () => {
     console.error('❌ Error getting validated prompt:', error);
     throw error;
   }
+};
+
+/**
+ * Get validated prompt content for specific timeframe (alias for backward compatibility)
+ * @param {string} timeframe - The timeframe ('last_week', 'last_month', 'last_year')
+ * @returns {Promise<string>} Validated prompt content
+ */
+export const getValidatedPromptByTimeframe = async (timeframe) => {
+  return await getValidatedPrompt(timeframe);
 };
 
 /**

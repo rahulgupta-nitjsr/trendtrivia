@@ -55,22 +55,31 @@ export const saveBatch = async (batchData) => {
 };
 
 /**
- * Get the most recent active batch
+ * Get the most recent active batch (optionally filtered by timeframe)
  */
-export const getLatestActiveBatch = async () => {
+export const getLatestActiveBatch = async (timeframe = null) => {
   try {
-    console.log('🔍 Fetching latest active batch...');
+    console.log(`🔍 Fetching latest active batch${timeframe ? ` for timeframe: ${timeframe}` : ''}...`);
     
     const batchesRef = collection(db, 'batches');
-    const q = query(
+    let q = query(
       batchesRef,
       where('isActive', '==', true)
     );
     
+    // Add timeframe filter if specified
+    if (timeframe) {
+      q = query(
+        batchesRef,
+        where('isActive', '==', true),
+        where('timeframe', '==', timeframe)
+      );
+    }
+    
     const querySnapshot = await getDocs(q);
     
     if (querySnapshot.empty) {
-      console.log('⚠️ No active batches found');
+      console.log(`⚠️ No active batches found${timeframe ? ` for timeframe: ${timeframe}` : ''}`);
       return null;
     }
     
@@ -92,10 +101,10 @@ export const getLatestActiveBatch = async () => {
     });
     
     if (latestBatch) {
-      console.log(`✅ Found active batch: ${latestBatch.batchId} with ${latestBatch.questions?.length || 0} questions`);
+      console.log(`✅ Found active batch: ${latestBatch.batchId} with ${latestBatch.questions?.length || 0} questions (timeframe: ${latestBatch.timeframe || 'default'})`);
       return latestBatch;
     } else {
-      console.log('⚠️ No active batches found');
+      console.log(`⚠️ No active batches found${timeframe ? ` for timeframe: ${timeframe}` : ''}`);
       return null;
     }
     
@@ -223,6 +232,64 @@ export const activateBatch = async (batchId) => {
       success: false,
       error: error.message,
       batchId
+    };
+  }
+};
+
+/**
+ * Activate a batch for a specific timeframe (deactivate others in same timeframe)
+ */
+export const activateBatchForTimeframe = async (batchId, timeframe) => {
+  try {
+    console.log(`🔄 Activating batch: ${batchId} for timeframe: ${timeframe}`);
+    
+    // First, deactivate all existing batches for this timeframe
+    const batchesRef = collection(db, 'batches');
+    const activeQuery = query(
+      batchesRef, 
+      where('isActive', '==', true),
+      where('timeframe', '==', timeframe)
+    );
+    const activeSnapshot = await getDocs(activeQuery);
+    
+    const deactivatePromises = activeSnapshot.docs.map(doc => 
+      updateDoc(doc.ref, { isActive: false, updatedAt: new Date() })
+    );
+    
+    await Promise.all(deactivatePromises);
+    console.log(`✅ Deactivated ${deactivatePromises.length} existing batches for timeframe: ${timeframe}`);
+    
+    // Now activate the target batch
+    const targetQuery = query(batchesRef, where('batchId', '==', batchId));
+    const targetSnapshot = await getDocs(targetQuery);
+    
+    if (targetSnapshot.empty) {
+      throw new Error(`Batch ${batchId} not found`);
+    }
+    
+    const targetDoc = targetSnapshot.docs[0];
+    await updateDoc(targetDoc.ref, { 
+      isActive: true, 
+      updatedAt: new Date(),
+      activatedAt: new Date()
+    });
+    
+    console.log(`✅ Successfully activated batch: ${batchId} for timeframe: ${timeframe}`);
+    
+    return {
+      success: true,
+      batchId,
+      timeframe,
+      activatedAt: new Date().toISOString()
+    };
+    
+  } catch (error) {
+    console.error(`❌ Error activating batch ${batchId} for timeframe ${timeframe}:`, error);
+    return {
+      success: false,
+      error: error.message,
+      batchId,
+      timeframe
     };
   }
 };

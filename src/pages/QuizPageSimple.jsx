@@ -13,8 +13,21 @@ function QuizPageSimple() {
   const [isLoading, setIsLoading] = useState(true);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [hoveredOption, setHoveredOption] = useState(null);
 
   const { topic, category, duration } = location.state || { topic: 'Technology', category: 'technology', duration: 'month' };
+
+  // Map frontend duration values to backend timeframe values
+  const mapDurationToTimeframe = (duration) => {
+    const durationMap = {
+      'week': 'last_week',
+      'month': 'last_month', 
+      'year': 'last_year'
+    };
+    return durationMap[duration] || 'last_month'; // Default to last_month
+  };
+
+  const timeframe = mapDurationToTimeframe(duration);
 
   useEffect(() => {
     loadQuestions();
@@ -23,16 +36,44 @@ function QuizPageSimple() {
   const loadQuestions = async () => {
     setIsLoading(true);
     
+    console.log('🎯 QuizPageSimple - Loading questions with:', {
+      category,
+      duration,
+      timeframe,
+      topic
+    });
+    console.log('🔍 Exact parameters being sent to Firebase:', {
+      count: 10,
+      category: category,
+      timeframe: timeframe,
+      'category type': typeof category,
+      'timeframe type': typeof timeframe
+    });
+    
     try {
+      console.log('🔍 About to call getQuizQuestions...');
       const result = await getQuizQuestions({ 
         count: 10, 
-        category: category 
+        category: category,
+        timeframe: timeframe
       });
+      console.log('📦 getQuizQuestions result:', result);
       
       if (result.success && result.questions.length > 0) {
         setQuestions(result.questions);
-        console.log('✅ Loaded questions from database');
+        console.log(`✅ Loaded ${result.questions.length} questions from database`, {
+          category,
+          timeframe,
+          duration,
+          source: result.metadata?.source || 'unknown',
+          batchId: result.metadata?.batchId || 'none'
+        });
       } else {
+        console.warn('⚠️ Firebase query failed or returned no questions:', {
+          success: result.success,
+          questionsLength: result.questions?.length || 0,
+          result: result
+        });
         // Fallback questions
         const fallbackQuestions = [
           {
@@ -67,7 +108,12 @@ function QuizPageSimple() {
         console.log('⚠️ Using fallback questions');
       }
     } catch (error) {
-      console.error('Error loading questions:', error);
+      console.error('❌ Error loading questions:', error);
+      console.error('❌ Error details:', {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
       // Use fallback on error
       const fallbackQuestions = [
         {
@@ -129,6 +175,7 @@ function QuizPageSimple() {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswer('');
       setShowResult(false);
+      setHoveredOption(null); // Reset hover state
     } else {
       // Quiz completed
       const finalScore = score + points;
@@ -263,6 +310,26 @@ function QuizPageSimple() {
         🏠 Home
       </button>
 
+      {/* Timeframe Indicator */}
+      <div style={{
+        position: 'absolute',
+        top: '20px',
+        right: '20px',
+        padding: '8px 16px',
+        backgroundColor: 'rgba(165, 180, 252, 0.2)',
+        border: '1px solid rgba(165, 180, 252, 0.3)',
+        borderRadius: '20px',
+        color: '#a5b4fc',
+        fontSize: '12px',
+        fontWeight: '500',
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px'
+      }}>
+        {duration === 'week' && '📅 Last Week'}
+        {duration === 'month' && '🗓️ Last Month'}  
+        {duration === 'year' && '📆 Last Year'}
+      </div>
+
       {/* Main Content */}
       <div style={{
         maxWidth: '800px',
@@ -374,24 +441,42 @@ function QuizPageSimple() {
                const correctAnswer = currentQuestion.answer || currentQuestion.correct;
                const isCorrectOption = option === correctAnswer;
                
-               let backgroundColor, borderColor;
+               // Determine button styling based on state
+               const isHovered = hoveredOption === index;
+               let backgroundColor = 'rgba(34, 211, 238, 0.1)'; // Default background
+               let borderColor = 'rgba(34, 211, 238, 0.2)'; // Default border
+               let boxShadow = 'none';
+               let transform = 'translateY(0)';
                
                if (showResult) {
+                 // After answer is submitted
                  if (isCorrectOption) {
-                   backgroundColor = 'rgba(16, 185, 129, 0.3)'; // Green for correct
+                   backgroundColor = 'rgba(16, 185, 129, 0.3)'; // Green for correct answer
                    borderColor = '#10b981';
+                   boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
                  } else if (isSelected && !isCorrectOption) {
                    backgroundColor = 'rgba(239, 68, 68, 0.3)'; // Red for wrong selection
                    borderColor = '#ef4444';
+                   boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
                  } else {
-                   backgroundColor = 'rgba(34, 211, 238, 0.1)';
-                   borderColor = 'rgba(34, 211, 238, 0.2)';
+                   backgroundColor = 'rgba(55, 65, 81, 0.3)'; // Neutral for unselected
+                   borderColor = 'rgba(107, 114, 128, 0.3)';
                  }
                } else {
-                 backgroundColor = isSelected 
-                   ? 'rgba(34, 211, 238, 0.3)' 
-                   : 'rgba(34, 211, 238, 0.1)';
-                 borderColor = isSelected ? '#22d3ee' : 'rgba(34, 211, 238, 0.2)';
+                 // Before answer is submitted
+                 if (isHovered && !showResult) {
+                   backgroundColor = 'rgba(34, 211, 238, 0.25)'; // Hover state
+                   borderColor = '#22d3ee';
+                   boxShadow = '0 6px 16px rgba(34, 211, 238, 0.4)';
+                   transform = 'translateY(-2px)';
+                 } else if (isSelected) {
+                   backgroundColor = 'rgba(34, 211, 238, 0.3)'; // Selected state
+                   borderColor = '#22d3ee';
+                   boxShadow = '0 4px 12px rgba(34, 211, 238, 0.3)';
+                 } else {
+                   backgroundColor = 'rgba(34, 211, 238, 0.1)'; // Default unselected
+                   borderColor = 'rgba(34, 211, 238, 0.2)';
+                 }
                }
                
                return (
@@ -400,35 +485,42 @@ function QuizPageSimple() {
                    onClick={() => !showResult && handleAnswerSelect(option)}
                    disabled={showResult}
                    style={{
-                     backgroundColor,
-                     border: `1px solid ${borderColor}`,
-                  borderRadius: '12px',
-                  padding: '15px',
-                                       color: 'white',
+                     backgroundColor: backgroundColor,
+                     border: `2px solid ${borderColor}`,
+                     borderRadius: '12px',
+                     padding: '20px',
+                     color: 'white',
                      cursor: showResult ? 'default' : 'pointer',
                      textAlign: 'left',
-                     minHeight: '60px',
+                     minHeight: '70px',
                      display: 'flex',
                      alignItems: 'center',
                      gap: '15px',
-                     transition: 'all 0.3s ease',
+                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                      fontSize: '16px',
-                     position: 'relative'
+                     fontWeight: '500',
+                     position: 'relative',
+                     outline: 'none',
+                     boxShadow: boxShadow,
+                     transform: transform,
+                     // Comprehensive background reset
+                     backgroundImage: 'none',
+                     backgroundRepeat: 'no-repeat',
+                     backgroundAttachment: 'scroll',
+                     backgroundClip: 'border-box',
+                     backgroundOrigin: 'padding-box',
+                     backgroundSize: 'auto',
+                     backgroundPosition: '0% 0%',
+                     // Browser appearance reset
+                     WebkitAppearance: 'none',
+                     MozAppearance: 'none',
+                     appearance: 'none',
+                     // Force background color to override any inherited styles
+                     backgroundBlendMode: 'normal',
+                     isolation: 'isolate'
                    }}
-                   onMouseEnter={(e) => {
-                     if (!showResult) {
-                       e.target.style.backgroundColor = 'rgba(34, 211, 238, 0.25)';
-                       e.target.style.transform = 'translateY(-2px)';
-                     }
-                   }}
-                   onMouseLeave={(e) => {
-                     if (!showResult) {
-                       e.target.style.backgroundColor = isSelected 
-                         ? 'rgba(34, 211, 238, 0.3)' 
-                         : 'rgba(34, 211, 238, 0.1)';
-                       e.target.style.transform = 'translateY(0)';
-                     }
-                   }}
+                   onMouseEnter={() => !showResult && setHoveredOption(index)}
+                   onMouseLeave={() => !showResult && setHoveredOption(null)}
                  >
                    <div style={{
                      width: '30px',
