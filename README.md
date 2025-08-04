@@ -6,12 +6,13 @@
 
 **A modern, interactive trivia application that tests your knowledge on the latest trends across Technology, Pop Culture, Finance, and Start-ups.**
 
+*Combining AI-powered content generation with engaging user experience design.*
+
 [![React](https://img.shields.io/badge/React-18.2.0-61DAFB?style=flat&logo=react)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.1.6-646CFF?style=flat&logo=vite)](https://vitejs.dev/)
 [![Styled Components](https://img.shields.io/badge/Styled%20Components-6.1.8-DB7093?style=flat&logo=styled-components)](https://styled-components.com/)
 [![Three.js](https://img.shields.io/badge/Three.js-0.162.0-000000?style=flat&logo=three.js)](https://threejs.org/)
-
-[🎮 Live Demo](#) | [📖 Documentation](#installation) | [🐛 Report Bug](../../issues) | [✨ Request Feature](../../issues)
+[![Perplexity API](https://img.shields.io/badge/Perplexity%20API-Content%20Generation-blue?style=flat&logo=perplexity)](https://perplexity.ai/)
 
 </div>
 
@@ -115,7 +116,7 @@
 
 **What it shows:** The results/score screen that appears after completing a quiz. Shows user performance results, score breakdown, and navigation options to return to the home page.
 
----
+
 
 ## 🏗️ Tech Stack
 
@@ -132,6 +133,16 @@
 🌌  Three.js 0.162.0    - 3D graphics library for space background
 🎭  React Three Fiber   - React renderer for Three.js
 🎪  React Three Drei    - Useful helpers for React Three Fiber
+```
+
+### **AI & Content Generation**
+```
+🤖  Perplexity API     - AI-powered question generation
+📝  Prompt Engineering - Sophisticated prompt design
+🔄  Batch Processing   - Scalable content creation
+✅  Quality Assurance  - AI response validation
+📊  Content Strategy   - Dynamic topic selection
+🎯  User Segmentation  - Personalized quiz experiences
 ```
 
 ### **Development Tools**
@@ -368,7 +379,11 @@ Home Page → Choose Challenge → How it Works → Play Quiz → Get Score
   "options": ["IBM", "Google", "Intel", "Apple"],
   "answer": "Google",
   "difficulty": "Hard",
-  "category": "Technology"
+  "category": "Technology",
+  "metadata": {
+    "trending_score": 0.85,
+    "user_engagement": 0.92
+  }
 }
 ```
 
@@ -384,6 +399,12 @@ Home Page → Choose Challenge → How it Works → Play Quiz → Get Score
 - **Easy**: 30% of questions (Basic knowledge)
 - **Medium**: 50% of questions (Current awareness)
 - **Hard**: 20% of questions (Expert level)
+
+### **Content Strategy**
+- **Dynamic Generation**: AI-powered content based on trending topics
+- **Quality Assurance**: Multi-layer validation for accuracy and relevance
+- **User Feedback Integration**: Continuous improvement through user interactions
+- **Performance Tracking**: Analytics-driven content optimization
 
 ---
 
@@ -444,6 +465,8 @@ Spacing Scale:
 - **Progress Tracking**: Real-time completion percentage
 - **Score Calculation**: Weighted scoring based on difficulty
 - **State Management**: Persistent quiz state during session
+- **Content Personalization**: AI-driven question selection based on user preferences
+- **Performance Analytics**: Detailed insights for continuous improvement
 
 ### **🎨 Glass Morphism UI**
 - **Backdrop Blur**: Modern frosted glass effects
@@ -456,6 +479,8 @@ Spacing Scale:
 - **Tablet Friendly**: Adaptive layouts for medium screens
 - **Desktop Enhanced**: Full-featured experience on large screens
 - **Cross-Browser**: Consistent experience across modern browsers
+- **Accessibility Compliance**: WCAG 2.1 AA standards implementation
+- **Performance Optimization**: Lighthouse score optimization for all devices
 
 ---
 
@@ -467,12 +492,16 @@ Spacing Scale:
 - **State Management**: React useState and useEffect
 - **Routing**: React Router DOM for navigation
 - **Code Quality**: ESLint with React rules
+- **Architecture Patterns**: Modular design with clear separation of concerns
+- **Scalability Planning**: Future-proof architecture for feature expansion
 
 ### **Performance Optimizations**
 - **Code Splitting**: Dynamic imports for route-based splitting
 - **Image Optimization**: Lazy loading and WebP format support
 - **Bundle Analysis**: Webpack bundle analyzer integration
 - **Caching Strategy**: Service worker for offline functionality
+- **API Optimization**: Efficient Perplexity integration with rate limiting
+- **User Experience Metrics**: Core Web Vitals optimization
 
 ### **Testing Strategy**
 ```bash
@@ -513,7 +542,7 @@ npm install --save-dev gh-pages
 "deploy": "gh-pages -d dist"
 ```
 
----
+
 
 ## 🤝 Contributing
 
@@ -539,6 +568,10 @@ We welcome contributions! Here's how you can help:
 - 📚 Documentation improvements
 - 🧪 Test coverage expansion
 - 🌐 Internationalization
+- 🤖 AI prompt optimization
+- 📊 Analytics and user behavior tracking
+- 🎯 A/B testing implementation
+- 🔄 Content management system
 
 ---
 
