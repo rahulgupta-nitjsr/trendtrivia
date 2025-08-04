@@ -421,8 +421,8 @@ function TopicPage() {
         <SectionTitle>How It Works</SectionTitle>
         <RulesList>
           <RuleItem>
-            <RuleIcon>10</RuleIcon>
-            <RuleText>Answer 10 carefully curated questions about recent {topicTitles[category].toLowerCase()} trends</RuleText>
+            <RuleIcon>📝</RuleIcon>
+            <RuleText>Answer carefully curated questions about recent {topicTitles[category].toLowerCase()} trends</RuleText>
           </RuleItem>
           <RuleItem>
             <RuleIcon>⏱️</RuleIcon>

@@ -3,9 +3,29 @@
  * Handles AI API calls with logging, cost tracking, and duplicate prevention
  */
 
-import { aiConfig } from '../config/aiConfig.js';
 import { getValidatedPrompt, getValidTimeframes } from './promptFileService.js';
 import { logApiCall, checkRecentCalls } from './apiLoggingService.js';
+
+// Dynamic import function for AI configuration
+async function getAiConfig() {
+  if (typeof window === 'undefined') {
+    // Node.js environment - use Node.js compatible config
+    const { aiConfig } = await import('../config/aiConfig-node.js');
+    return aiConfig;
+  } else {
+    // Browser environment - use Vite config
+    const { aiConfig } = await import('../config/aiConfig.js');
+    return aiConfig;
+  }
+}
+
+// Initialize aiConfig
+let aiConfig = null;
+
+// Initialize the configuration
+(async () => {
+  aiConfig = await getAiConfig();
+})();
 
 /**
  * Generate a unique batch ID with timestamp and timeframe

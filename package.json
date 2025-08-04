@@ -8,11 +8,15 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test": "jest"
+    "test": "jest",
+    "generate-questions": "node generate-questions.js",
+    "demo-generation": "node demo-batch-generation.js",
+    "simple-batch": "node simple-batch-generator.js"
   },
   "dependencies": {
     "@react-three/drei": "^9.102.6",
     "@react-three/fiber": "^8.15.19",
+    "dotenv": "^17.2.1",
     "firebase": "^12.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

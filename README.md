@@ -17,6 +17,18 @@
 
 ---
 
+## 🏠 Home Screen Preview
+
+<div align="center">
+
+![TrendTrivia Home Screen](public/screenshots/1%20Home%20Page.jpg)
+
+*Welcome to TrendTrivia - Your gateway to testing knowledge on the latest trends and current events*
+
+</div>
+
+---
+
 ## 📋 Table of Contents
 
 - [✨ Features](#-features)
@@ -60,55 +72,48 @@
 
 ## 🎮 App Flow & Screenshots
 
-### 🏠 **1. Home Screen**
-*Welcome page with topic selection and motivational elements*
+### 🏠 **1. Home Page**
+*Welcome screen with topic selection and motivational elements*
 
-![Home Screen](screenshots/home-screen.png)
+![Home Page](public/screenshots/1%20Home%20Page.jpg)
 
-**Key Elements:**
-- Welcome message with Socrates quote
-- 4 interactive topic cards with emojis
-- High score display
-- Modern glass morphism design
+**What it shows:** The main landing page where users are introduced to TrendTrivia. Features the app's branding, topic selection cards, and an overview of the quiz categories available.
 
 ---
 
-### 🎯 **2. Topic Page**
-*Rules explanation and quiz customization*
+### 🎯 **2. Choose Your Challenge**
+*Challenge selection interface with different quiz categories*
 
-![Topic Page](screenshots/topic-page.png)
+![Choose Your Challenge](public/screenshots/2%20Choose%20Your%20Challenge.png)
 
-**Key Elements:**
-- Dynamic topic title based on selection
-- Clear game rules explanation
-- Duration selection (Last Week/Month/Year)
-- Start quiz button with hover effects
+**What it shows:** Users can select from different quiz categories or difficulty levels. This screen demonstrates the app's modular approach to quiz content, giving users control over their learning experience.
 
 ---
 
-### ❓ **3. Quiz Page**
-*Interactive question interface with progress tracking*
+### ⚙️ **3. How it Works - Time Frame Selection**
+*Configuration screen for selecting quiz timeframes*
 
-![Quiz Page](screenshots/quiz-page.png)
+![How it Works](public/screenshots/3.%20How%20it%20works%20select%20time%20frame,%20start%20challlenge.png)
 
-**Key Elements:**
-- Question counter (e.g., "Question 3 of 10")
-- Progress bar with smooth animations
-- Multiple choice options with hover states
-- Next/Submit button functionality
+**What it shows:** Users can select different time frames for their quiz challenges (e.g., last week, last month, last year). This feature allows for targeted learning about current events and trends from specific periods.
 
 ---
 
-### 🏆 **4. Results Page**
-*Comprehensive score breakdown and performance analysis*
+### ❓ **4. Play the Quiz**
+*Interactive quiz interface with questions and answers*
 
-![Results Page](screenshots/results-page.png)
+![Play the Quiz](public/screenshots/4%20Play%20the%20Quiz.png)
 
-**Key Elements:**
-- Final score with percentage
-- Performance breakdown by difficulty
-- Motivational messages based on score
-- Play again and home navigation options
+**What it shows:** The active quiz interface where users answer questions. Displays the question format, answer options, and interactive elements that users engage with during gameplay.
+
+---
+
+### 🏆 **5. Get Score & Return to Home**
+*Results screen with performance analysis*
+
+![Get Score](public/screenshots/5%20Get%20Score%20then%20back%20to%20home.png)
+
+**What it shows:** The results/score screen that appears after completing a quiz. Shows user performance results, score breakdown, and navigation options to return to the home page.
 
 ---
 
@@ -152,33 +157,35 @@
 
 ```mermaid
 graph TD
-    A["🏠 Home Page<br/>Topic Selection"] --> B["🎯 Topic Page<br/>Rules & Customization"]
-    B --> C["❓ Quiz Page<br/>Interactive Questions"]
-    C --> D["🏆 Results Page<br/>Score Analysis"]
+    A["🏠 Home Page<br/>Topic Selection"] --> B["🎯 Choose Challenge<br/>Category Selection"] --> C["⚙️ How it Works<br/>Time Frame Setup"] --> D["❓ Play Quiz<br/>Interactive Questions"] --> E["🏆 Get Score<br/>Results Analysis"]
+    E --> A
     D --> A
     C --> A
     B --> A
     
-    E["📱 React Router<br/>Navigation"] --> A
-    E --> B
-    E --> C
-    E --> D
-    
-    F["🎨 Styled Components<br/>Theme System"] --> A
+    F["📱 React Router<br/>Navigation"] --> A
     F --> B
     F --> C
     F --> D
+    F --> E
     
-    G["🌌 Background Component<br/>Animated Space Scene"] --> A
+    G["🎨 Styled Components<br/>Theme System"] --> A
     G --> B
     G --> C
     G --> D
+    G --> E
     
-    H["📊 Quiz Data<br/>quiz.json"] --> C
+    H["🌌 Background Component<br/>Animated Space Scene"] --> A
+    H --> B
+    H --> C
     H --> D
+    H --> E
     
-    I["⚛️ React State<br/>Quiz Progress"] --> C
-    I --> D
+    I["📊 Quiz Data<br/>quiz.json"] --> D
+    I --> E
+    
+    J["⚛️ React State<br/>Quiz Progress"] --> D
+    J --> E
     
     style A fill:#6366f1,stroke:#4f46e5,color:#fff
     style B fill:#8b5cf6,stroke:#7c3aed,color:#fff
@@ -189,6 +196,7 @@ graph TD
     style G fill:#8b5cf6,stroke:#7c3aed,color:#fff
     style H fill:#ef4444,stroke:#dc2626,color:#fff
     style I fill:#06b6d4,stroke:#0891b2,color:#fff
+    style J fill:#84cc16,stroke:#65a30d,color:#fff
 ```
 
 ### **Component Hierarchy**
@@ -240,7 +248,14 @@ graph TD
 ```
 TrendTrivia/
 ├── 📁 public/
-│   └── quiz.json              # Quiz questions database (40 questions)
+│   ├── quiz.json              # Quiz questions database (40 questions)
+│   └── 📁 screenshots/        # Application screenshots
+│       ├── 1 Home Page.jpg
+│       ├── 2 Choose Your Challenge.png
+│       ├── 3. How it works select time frame, start challlenge.png
+│       ├── 4 Play the Quiz.png
+│       ├── 5 Get Score then back to home.png
+│       └── screenshot_info.md # Screenshot documentation
 ├── 📁 src/
 │   ├── 📄 App.jsx            # Main application component with routing
 │   ├── 📄 main.jsx           # Application entry point
@@ -261,7 +276,6 @@ TrendTrivia/
 │   └── 📁 utils/             # Utility functions and helpers
 ├── 📁 documents/             # Design mockups and wireframes
 ├── 📁 memory-bank/           # Project documentation and planning
-├── 📁 screenshots/           # App screenshots for README
 ├── 📄 package.json          # Dependencies and scripts
 ├── 📄 vite.config.js        # Vite configuration
 └── 📄 README.md             # This comprehensive guide
@@ -319,15 +333,16 @@ npm run test     # Run Jest unit tests
 ### **Playing the Quiz**
 
 1. **🏠 Start at Home**: Choose from 4 trending categories
-2. **🎯 Customize Experience**: Select duration and review rules
-3. **❓ Answer Questions**: Progress through 10 curated questions
-4. **🏆 View Results**: Analyze performance and celebrate achievements
+2. **🎯 Choose Challenge**: Select your preferred quiz type
+3. **⚙️ Configure Timeframe**: Select duration and review rules
+4. **❓ Answer Questions**: Progress through 10 curated questions
+5. **🏆 View Results**: Analyze performance and celebrate achievements
 
 ### **Navigation Flow**
 ```
-Home Screen → Topic Page → Quiz Page → Results Page
-     ↑                                       ↓
-     ←←←←←←←← Back to Home ←←←←←←←←←←←←←←←←←
+Home Page → Choose Challenge → How it Works → Play Quiz → Get Score
+     ↑                                                           ↓
+     ←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←
 ```
 
 ### **Scoring System**

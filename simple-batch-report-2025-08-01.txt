@@ -1,0 +1,38 @@
+
+================================================================================
+📋 SIMPLE BATCH QUESTION GENERATION REPORT
+================================================================================
+⏰ Generated at: 8/1/2025, 3:32:46 PM
+🎯 Total timeframes processed: 3
+✅ Successful generations: 0/3
+📊 Total questions generated: 0
+⏱️ Total duration: 0.0s
+
+1. Last Week
+   Status: ❌ FAILED
+   Questions: 0
+   Duration: 0.0s
+   Source: Unknown
+   Errors: Generation failed: Failed to get prompt: undefined
+
+2. Last Month
+   Status: ❌ FAILED
+   Questions: 0
+   Duration: 0.0s
+   Source: Unknown
+   Errors: Generation failed: Failed to get prompt: undefined
+
+3. Last Year
+   Status: ❌ FAILED
+   Questions: 0
+   Duration: 0.0s
+   Source: Unknown
+   Errors: Generation failed: Failed to get prompt: undefined
+
+📈 SUMMARY
+----------------------------------------
+Success rate: 0.0%
+Total questions: 0
+Average per timeframe: 0.0
+⚠️ 3 timeframe(s) failed.
+================================================================================

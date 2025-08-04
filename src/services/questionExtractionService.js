@@ -19,6 +19,7 @@ import {
   getDoc
 } from 'firebase/firestore';
 import { getBatchById } from './batchService.js';
+import { randomizeQuestionsArray } from '../utils/questionRandomizer.js';
 
 /**
  * Extract questions from a batch and save as individual documents
@@ -168,11 +169,16 @@ export const getActiveQuestions = async (options = {}) => {
     
     console.log(`✅ Found ${questions.length} active questions`);
     
+    // Apply randomization to ensure balanced answer distribution
+    console.log(`🎲 Applying randomization to ${questions.length} active questions...`);
+    const randomizedQuestions = randomizeQuestionsArray(questions);
+    
     return {
       success: true,
-      questions,
-      count: questions.length,
-      filters: { category, difficulty, limit: questionLimit, excludeUsed }
+      questions: randomizedQuestions,
+      count: randomizedQuestions.length,
+      filters: { category, difficulty, limit: questionLimit, excludeUsed },
+      randomizationApplied: true
     };
     
   } catch (error) {
@@ -230,14 +236,19 @@ export const getQuestionsFromLatestBatch = async (count = 10, options = {}) => {
       fetchedAt: new Date().toISOString()
     }));
     
-    console.log(`✅ Returning ${questionsWithMetadata.length} questions from active batch`);
+    // Apply randomization to ensure balanced answer distribution
+    console.log(`🎲 Applying randomization to ${questionsWithMetadata.length} batch questions...`);
+    const randomizedQuestions = randomizeQuestionsArray(questionsWithMetadata);
+    
+    console.log(`✅ Returning ${randomizedQuestions.length} randomized questions from active batch`);
     
     return {
       success: true,
-      questions: questionsWithMetadata,
-      count: questionsWithMetadata.length,
+      questions: randomizedQuestions,
+      count: randomizedQuestions.length,
       source: 'latest_batch',
-      batchId: latestBatch.batchId
+      batchId: latestBatch.batchId,
+      randomizationApplied: true
     };
     
   } catch (error) {

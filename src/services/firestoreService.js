@@ -18,6 +18,7 @@ import {
 } from 'firebase/firestore';
 import { getQuestionsFromLatestBatch, getActiveQuestions } from './questionExtractionService.js';
 import { getLatestActiveBatch, getBatchStats } from './batchService.js';
+import { randomizeQuestionsArray, analyzeAnswerDistribution } from '../utils/questionRandomizer.js';
 
 /**
  * Enhanced question fetching with batch integration and fallback
@@ -81,20 +82,30 @@ export const getQuizQuestions = async (options = {}) => {
       batchInfo: result.batchId || null
     }));
     
-    console.log(`✅ Successfully fetched ${enhancedQuestions.length} questions from ${source}`);
+    // ALWAYS apply randomization to ensure balanced answer distribution
+    console.log(`🎲 Applying randomization to ${enhancedQuestions.length} questions...`);
+    const randomizedQuestions = randomizeQuestionsArray(enhancedQuestions);
+    
+    // Generate analytics for monitoring
+    const distribution = analyzeAnswerDistribution(randomizedQuestions);
+    console.log(`✅ Successfully fetched and randomized ${randomizedQuestions.length} questions from ${source}`);
+    console.log(`📊 Answer distribution: A:${distribution.percentages.A}, B:${distribution.percentages.B}, C:${distribution.percentages.C}, D:${distribution.percentages.D}`);
     
     return {
       success: true,
-      questions: enhancedQuestions,
-      count: enhancedQuestions.length,
+      questions: randomizedQuestions,
+      count: randomizedQuestions.length,
       source,
+      randomizationApplied: true,
+      answerDistribution: distribution,
       metadata: {
         requestedCount: count,
-        actualCount: enhancedQuestions.length,
+        actualCount: randomizedQuestions.length,
         category,
         difficulty,
         timeframe,
-        fetchedAt: new Date().toISOString()
+        fetchedAt: new Date().toISOString(),
+        randomizedAt: new Date().toISOString()
       }
     };
     
@@ -104,12 +115,17 @@ export const getQuizQuestions = async (options = {}) => {
     // Emergency fallback to hardcoded questions
     const fallbackQuestions = getEmergencyFallbackQuestions(options.count || 10);
     
+    // Apply randomization even to fallback questions
+    console.log('🎲 Applying randomization to emergency fallback questions...');
+    const randomizedFallbackQuestions = randomizeQuestionsArray(fallbackQuestions);
+    
     return {
       success: false,
       error: error.message,
-      questions: fallbackQuestions,
-      count: fallbackQuestions.length,
-      source: 'emergency_fallback'
+      questions: randomizedFallbackQuestions,
+      count: randomizedFallbackQuestions.length,
+      source: 'emergency_fallback',
+      randomizationApplied: true
     };
   }
 };
