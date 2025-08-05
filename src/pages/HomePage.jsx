@@ -85,13 +85,17 @@ const SectionTitle = styled.h2`
 
 const TopicsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: ${({ theme }) => theme.spacing.large};
   margin-bottom: ${({ theme }) => theme.spacing.xlarge};
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
     gap: ${({ theme }) => theme.spacing.medium};
+    max-width: 100%;
   }
 
   @media (max-width: 480px) {
@@ -109,7 +113,7 @@ const TopicCard = styled.button`
   text-align: center;
   position: relative;
   overflow: hidden;
-  min-height: 160px;
+  min-height: 180px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -162,11 +166,11 @@ const TopicCard = styled.button`
 `;
 
 const TopicEmoji = styled.div`
-  font-size: 3rem;
+  font-size: 3.5rem;
   margin-bottom: ${({ theme }) => theme.spacing.small};
   
   @media (max-width: 768px) {
-    font-size: 2.5rem;
+    font-size: 3rem;
   }
 `;
 
@@ -290,7 +294,7 @@ function HomePage() {
     <HomeContainer>
       <HeroSection className="reveal">
         <WelcomeText>Welcome to the ultimate trivia challenge</WelcomeText>
-        <MainHeading>SO YOU THINK YOU ARE UP TO DATE?</MainHeading>
+        <MainHeading>How Well Do You Know What's Trending?</MainHeading>
         <SubHeading>Test Your Knowledge on Latest Trends</SubHeading>
         <Description>
           Challenge yourself with the most current questions across technology, pop culture, 
