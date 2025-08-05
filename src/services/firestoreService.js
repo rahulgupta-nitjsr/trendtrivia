@@ -19,6 +19,7 @@ import {
 import { getQuestionsFromLatestBatch, getActiveQuestions } from './questionExtractionService.js';
 import { getLatestActiveBatch, getBatchStats } from './batchService.js';
 import { randomizeQuestionsArray, analyzeAnswerDistribution } from '../utils/questionRandomizer.js';
+import { getComprehensiveFallbackQuestions } from './comprehensiveFallbackService.js';
 
 /**
  * Enhanced question fetching with batch integration and fallback
@@ -68,10 +69,29 @@ export const getQuizQuestions = async (options = {}) => {
     }
     
     if (!result.success || result.questions.length === 0) {
-      // Final fallback to legacy static questions
-      console.log('🔄 Falling back to legacy static questions...');
-      result = await getLegacyQuestions(count);
-      source = 'legacy_fallback';
+      // Final fallback to comprehensive fallback questions
+      console.log(`🔄 Falling back to comprehensive fallback questions for ${category || 'any'} topic and ${timeframe || 'any'} timeframe...`);
+      
+      // Map category to topic format
+      const topicMap = {
+        'technology': 'Technology',
+        'pop-culture': 'Pop Culture',
+        'finance': 'Finance',
+        'startups': 'Start-Ups'
+      };
+      
+      const topic = topicMap[category] || 'Technology';
+      const fallbackTimeframe = timeframe || 'last_week';
+      
+      result = await getComprehensiveFallbackQuestions(topic, fallbackTimeframe, count);
+      source = `comprehensive_fallback_${topic}_${fallbackTimeframe}`;
+      
+      if (!result.success) {
+        // Emergency fallback to legacy questions
+        console.log('🔄 Emergency fallback to legacy static questions...');
+        result = await getLegacyQuestions(count);
+        source = 'legacy_fallback';
+      }
     }
     
     // Add metadata to questions
