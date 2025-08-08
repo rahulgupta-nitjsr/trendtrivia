@@ -1,8 +1,8 @@
 # 🎉 **Local Scheduler Implementation Complete!**
 
-## **✅ What Was Built**
+## **✅ What Was Built (Spark plan)**
 
-You now have a **fully functional AI content generation system** that works **without upgrading Firebase** to the Blaze plan. Here's what was implemented:
+You now have a **fully functional AI content generation system** that works on Firebase **Spark (free)** without upgrading to Blaze. Here's what was implemented:
 
 ### **🔧 New Files Created:**
 

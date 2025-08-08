@@ -1,8 +1,8 @@
-# 🖥️ Local Scheduler Guide (No Firebase Upgrade Required)
+# 🖥️ Local Scheduler Guide (Spark plan, no Blaze required)
 
 ## **✅ What You Get**
 
-A **fully functional AI content generation system** that works without upgrading to Firebase Blaze plan. This approach uses your browser's capabilities and localStorage for persistence.
+A **fully functional AI content generation system** that works on Firebase Spark (free) without upgrading to Blaze. This approach uses your browser's capabilities and localStorage for persistence, or Node scripts for headless runs.
 
 ## **🚀 How It Works**
 

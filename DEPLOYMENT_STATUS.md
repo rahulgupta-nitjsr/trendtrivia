@@ -15,51 +15,35 @@
   - `firestore.rules` ✅
   - `firestore.indexes.json` ✅
 
-## ⏳ **Pending Steps**
+## ⏳ **Pending Steps (Spark plan only)**
 
-### **1. Firebase Plan Upgrade (REQUIRED)**
-- [ ] **Upgrade to Blaze plan** at: https://console.firebase.google.com/project/trendtrivia-9019c/usage/details
-- [ ] **Add payment method** (required for external API calls)
-- [ ] **Confirm upgrade**
-
-### **2. API Key Configuration**
+### **1. API Key Configuration**
 - [ ] **Get Perplexity API key** from: https://perplexity.ai
 - [ ] **Update Firebase config**:
   ```bash
   firebase functions:config:set perplexity.api_key="your-actual-api-key"
   ```
 
-### **3. Deploy Functions**
-- [ ] **Deploy to production**:
+### **2. Deployment Strategy (No Blaze required)**
+- Cloud Functions deployment is optional and not required on Spark. External API calls from Google Cloud Functions typically require Blaze; for this project we will
+  rely on the local scheduler and client/Node scripts for generation.
+- If you still want to deploy other Firebase resources on Spark (e.g., Hosting, Rules, Indexes):
   ```bash
-  firebase deploy --only functions
+  firebase deploy --only hosting,firestore:rules,firestore:indexes
   ```
 
-### **4. Test Functions**
-- [ ] **Test manual generation**:
-  ```bash
-  curl https://us-central1-trendtrivia-9019c.cloudfunctions.net/testGeneration
-  ```
-- [ ] **Test scheduled function** (wait for Monday 9 AM or trigger manually)
+### **3. Local/Client Scheduling (Recommended on Spark)**
+- Use the built-in local scheduler (already initialized in `src/main.jsx`) to generate weekly content when the app is open.
+- Manual triggers are available via the browser console (see `LOCAL_SCHEDULER_GUIDE.md`).
 
 ## 🔧 **Current Status**
 
-**Error Encountered**: 
-```
-Error: Your project trendtrivia-9019c must be on the Blaze (pay-as-you-go) plan to complete this command.
-```
-
-**Solution**: Upgrade Firebase project to Blaze plan.
+We will remain on the Firebase Spark (free) plan. Cloud Functions that perform external API calls will not be deployed. Content generation runs via the local scheduler and client/Node scripts.
 
 ## 📊 **What Will Happen After Deployment**
 
 ### **Scheduled Function** (Every Monday 9 AM EST)
-- ✅ Automatically triggers on Google's servers
-- ✅ Calls Perplexity AI API
-- ✅ Generates 40 trivia questions
-- ✅ Saves to Firestore database
-- ✅ Logs all activity
-- ✅ Works even when your app is closed
+- Optional/Not in use on Spark for external API calls. Use the local scheduler instead.
 
 ### **Manual Function** (On-demand)
 - ✅ HTTP endpoint for manual triggers
@@ -72,26 +56,18 @@ Error: Your project trendtrivia-9019c must be on the Blaze (pay-as-you-go) plan 
 - ✅ Detailed logging
 - ✅ No impact on production
 
-## 💰 **Cost Estimate**
+## 💰 **Cost Estimate (Spark plan)**
 
-- **Free Tier**: 2 million invocations/month
-- **Your Usage**: ~52 times/year (weekly generation)
-- **Estimated Cost**: **FREE** (well within free tier)
-- **Perplexity API**: ~$0.01 per generation
+- Firebase Spark: No charge for enabled resources within free limits (Firestore reads/writes within quotas)
+- Perplexity API: ~$0.01 per generation (billed by Perplexity)
 
 ## 🎯 **Next Actions**
 
-1. **Upgrade Firebase plan** (required)
-2. **Add your Perplexity API key**
-3. **Deploy functions**
-4. **Test the system**
+1. **Add your Perplexity API key**
+2. **Use the local scheduler for weekly generation**
+3. **Optionally deploy Hosting/Rules/Indexes on Spark**
+4. **Test the system locally and via the app console commands**
 
 ## 📞 **Support**
 
-If you need help with the upgrade process:
-1. Visit: https://console.firebase.google.com/project/trendtrivia-9019c/usage/details
-2. Click "Upgrade to Blaze"
-3. Add payment method
-4. Confirm upgrade
-
-The functions are ready to deploy once the plan is upgraded! 
+Cloud Functions with external API calls are intentionally not deployed on Spark. Use the local scheduler flow documented in `LOCAL_SCHEDULER_GUIDE.md`.

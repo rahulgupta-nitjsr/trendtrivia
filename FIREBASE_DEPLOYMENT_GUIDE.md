@@ -1,8 +1,8 @@
 # 🔥 Firebase Cloud Functions Deployment Guide
 
-## **What This Solves**
+## **What This Solves (Spark plan context)**
 
-Your current scheduler only works when the browser is open. Firebase Cloud Functions run on Google's servers 24/7, so your AI content generation will happen automatically every Monday at 9 AM EST, even when your app is closed.
+On Firebase Spark plan, external API calls from Cloud Functions generally require Blaze. For this project we will not use Blaze. Instead, use the provided local scheduler (runs in the client or Node) to handle weekly generation. This guide remains as a reference for Cloud Functions structure, but deployment of functions that call external APIs is optional and not required.
 
 ## **Step 1: Install Firebase CLI**
 
@@ -62,14 +62,11 @@ firebase emulators:start
 curl http://localhost:5001/your-project/us-central1/testGeneration
 ```
 
-## **Step 7: Deploy to Production**
+## **Step 7: (Optional) Deploy Firebase resources on Spark**
 
 ```bash
-# Deploy functions only
-firebase deploy --only functions
-
-# Deploy everything
-firebase deploy
+# Deploy Hosting, Firestore rules and indexes (Spark plan)
+firebase deploy --only hosting,firestore:rules,firestore:indexes
 ```
 
 ## **How It Works**
@@ -103,13 +100,15 @@ exports.testGeneration = functions.https.onRequest(async (req, res) => {
 });
 ```
 
-## **Available Functions**
+## **Available Functions (reference only on Spark)**
 
-| Function | URL | Purpose |
-|----------|-----|---------|
-| `scheduledGeneration` | Automatic | Runs every Monday 9 AM EST |
-| `manualGeneration` | `/manualGeneration` | Manual trigger via HTTP |
-| `testGeneration` | `/testGeneration` | Testing and development |
+These functions exist in code but are not deployed on Spark for external API usage:
+
+| Function | Purpose |
+|----------|---------|
+| `scheduledGeneration` | Scheduled generation (requires Blaze for external calls) |
+| `manualGeneration` | HTTP trigger (requires Blaze for external calls) |
+| `testGeneration` | HTTP test (requires Blaze for external calls) |
 
 ## **Monitoring and Logs**
 
@@ -191,24 +190,19 @@ firebase functions:log --only scheduledGeneration
 firebase functions:describe scheduledGeneration
 ```
 
-## **Production Checklist**
+## **Production Checklist (Spark)**
 
 - [ ] Firebase CLI installed and logged in
-- [ ] Project initialized with functions
-- [ ] Dependencies installed (`npm install` in functions folder)
-- [ ] API key configured (`firebase functions:config:set`)
-- [ ] Functions deployed (`firebase deploy --only functions`)
-- [ ] Test function works (`curl /testGeneration`)
-- [ ] Manual trigger works (`curl /manualGeneration`)
-- [ ] Logs are being generated
-- [ ] Questions are being saved to Firestore
+- [ ] Hosting/Rules/Indexes deployed (optional)
+- [ ] Local scheduler initialized in app (`initializeLocalScheduler()`)
+- [ ] Perplexity API key set in client/node env (never commit)
+- [ ] Questions saved to Firestore via local generation
 
-## **Next Steps After Deployment**
+## **Next Steps (Spark)**
 
-1. **Test the scheduled function** by waiting for Monday 9 AM or manually triggering
-2. **Monitor logs** to ensure everything works
-3. **Update your React app** to use the new Cloud Functions
-4. **Set up monitoring** for production alerts
+1. Use local scheduler manual triggers to validate generation
+2. Monitor Firestore for batches/questions and `api_logs`
+3. Keep the app running on a reliable machine during the scheduled time if you want weekly generation via local scheduler
 
 ## **Integration with Your React App**
 
