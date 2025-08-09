@@ -71,7 +71,7 @@ firebase deploy --only hosting,firestore:rules,firestore:indexes
 
 ## **How It Works**
 
-### **1. Scheduled Function**
+### **1. Scheduled Function (reference only on Spark)**
 ```javascript
 exports.scheduledGeneration = functions.pubsub
   .schedule('0 9 * * 1')  // Every Monday 9 AM
@@ -82,7 +82,7 @@ exports.scheduledGeneration = functions.pubsub
   });
 ```
 
-### **2. Manual Trigger**
+### **2. Manual Trigger (reference only on Spark)**
 ```javascript
 exports.manualGeneration = functions.https.onRequest(async (req, res) => {
   // Trigger via HTTP request
@@ -91,7 +91,7 @@ exports.manualGeneration = functions.https.onRequest(async (req, res) => {
 });
 ```
 
-### **3. Test Function**
+### **3. Test Function (reference only on Spark)**
 ```javascript
 exports.testGeneration = functions.https.onRequest(async (req, res) => {
   // For testing and development
@@ -111,6 +111,9 @@ These functions exist in code but are not deployed on Spark for external API usa
 | `testGeneration` | HTTP test (requires Blaze for external calls) |
 
 ## **Monitoring and Logs**
+## **CI-based Scheduler (Recommended on Spark)**
+
+Use GitHub Actions to run a Node script every Monday 9AM EST to generate questions and save to Firestore. See `memory-bank/automation-scheduler.md` for a sample workflow and required secrets.
 
 ### **View Function Logs**
 ```bash

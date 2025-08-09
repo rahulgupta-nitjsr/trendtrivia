@@ -71,6 +71,14 @@
 
 ---
 
+## 🧭 Current Plan (Spark-only)
+
+We are staying on Firebase Spark (no Blaze). The app will:
+- Fetch 10 questions per selected topic and timeframe from Firestore, with a robust multi-step fallback to a comprehensive local dataset if needed
+- Refresh questions weekly via a GitHub Actions scheduler (no servers required) that calls the AI, validates results, saves to Firestore, and logs costs
+- Undergo end-to-end tests (manually triggered) to verify reliability and no secret leaks
+- Deploy to Cloudflare Pages or Firebase Hosting on Spark (no private keys in client)
+
 ## 🎮 App Flow & Screenshots
 
 ### 🏠 **1. Home Page**
