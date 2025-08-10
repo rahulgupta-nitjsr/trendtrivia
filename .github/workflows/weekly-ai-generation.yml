@@ -1,0 +1,69 @@
+name: Weekly AI Question Generation
+
+on:
+  # Runs every Monday at 9AM EST (2PM UTC)
+  schedule:
+    - cron: '0 14 * * 1'
+  
+  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      force_regenerate:
+        description: 'Force regeneration even if recent batch exists'
+        required: false
+        default: 'false'
+        type: boolean
+      timeframes:
+        description: 'Timeframes to generate (comma-separated: last_week,last_month,last_year)'
+        required: false
+        default: 'last_week,last_month,last_year'
+        type: string
+
+jobs:
+  generate-questions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Create Firebase service account file
+      run: |
+        echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > firebase-service-account.json
+        
+    - name: Run AI Question Generation
+      env:
+        PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
+        FIREBASE_SERVICE_ACCOUNT_PATH: firebase-service-account.json
+        EMAIL_SERVICE_API_KEY: ${{ secrets.EMAIL_SERVICE_API_KEY }}
+        EMAIL_RECIPIENT: rahulgupta.nitjsr@gmail.com
+        FORCE_REGENERATE: ${{ github.event.inputs.force_regenerate || 'false' }}
+        TIMEFRAMES: ${{ github.event.inputs.timeframes || 'last_week,last_month,last_year' }}
+        TRIGGER_SOURCE: ${{ github.event_name == 'schedule' && 'scheduled' || 'manual' }}
+      run: |
+        node scripts/generate-weekly-questions.js
+        
+    - name: Clean up service account file
+      if: always()
+      run: |
+        rm -f firebase-service-account.json
+        
+    - name: Upload generation logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: generation-logs-${{ github.run_number }}
+        path: |
+          logs/
+          *.log
+        retention-days: 30
