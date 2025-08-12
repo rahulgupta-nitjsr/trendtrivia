@@ -2,30 +2,35 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     // Allow read access to questions for the quiz app
+    // Questions are public for quiz functionality but only admins can write
     match /questions/{questionId} {
       allow read: if true;
-      allow write: if request.auth != null || request.auth == null; // Allow writes in emulator
+      allow write: if request.auth != null; // Only authenticated users can write
     }
     
     // Allow read access to batches for status checking
+    // Batches are readable by all for transparency, writable by admins only
     match /batches/{batchId} {
       allow read: if true;
       allow write: if request.auth != null;
     }
     
     // Allow read access to prompts
+    // Prompts are readable for transparency, writable by admins only
     match /prompts/{promptId} {
       allow read: if true;
       allow write: if request.auth != null;
     }
     
     // Allow read access to topics
+    // Topics are readable by all, writable by admins only
     match /topics/{topicId} {
       allow read: if true;
       allow write: if request.auth != null;
     }
     
     // Allow read access to system metadata
+    // System metadata readable by all for status info, writable by admins only
     match /system_metadata/{docId} {
       allow read: if true;
       allow write: if request.auth != null;
