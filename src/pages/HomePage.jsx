@@ -17,7 +17,9 @@ const HeroSection = styled.div`
   border-radius: ${({ theme }) => theme.borderRadiusXLarge};
   padding: ${({ theme }) => theme.spacing.xlarge};
   margin-bottom: ${({ theme }) => theme.spacing.xlarge};
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.xlarge};
   position: relative;
   overflow: hidden;
   
@@ -34,6 +36,12 @@ const HeroSection = styled.div`
     background: radial-gradient(circle at 20% 50%, rgba(34, 211, 238, 0.05) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(165, 180, 252, 0.05) 0%, transparent 50%);
     pointer-events: none;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+    gap: ${({ theme }) => theme.spacing.large};
   }
 `;
 
@@ -64,8 +72,48 @@ const Description = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.medium};
   color: ${({ theme }) => theme.colors.textSecondary};
   max-width: 600px;
-  margin: 0 auto ${({ theme }) => theme.spacing.xlarge};
+  margin: 0 0 ${({ theme }) => theme.spacing.xlarge} 0;
   line-height: 1.6;
+`;
+
+const HeroContent = styled.div`
+  flex: 1;
+  text-align: left;
+  
+  @media (max-width: 768px) {
+    text-align: center;
+  }
+`;
+
+const HeroImage = styled.div`
+  flex: 0 0 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  @media (max-width: 768px) {
+    flex: none;
+    width: 100%;
+    max-width: 250px;
+  }
+`;
+
+const CuriosityImage = styled.img`
+  width: 100%;
+  height: auto;
+  max-width: 300px;
+  border-radius: ${({ theme }) => theme.borderRadiusLarge};
+  box-shadow: 0 8px 32px rgba(34, 211, 238, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(34, 211, 238, 0.3);
+  }
+  
+  @media (max-width: 768px) {
+    max-width: 250px;
+  }
 `;
 
 const TopicsSection = styled.div`
@@ -293,13 +341,22 @@ function HomePage() {
   return (
     <HomeContainer>
       <HeroSection className="reveal">
-        <WelcomeText>Welcome to the ultimate trivia challenge</WelcomeText>
-        <MainHeading>How Well Do You Know What's Trending?</MainHeading>
-        <SubHeading>Test Your Knowledge on Latest Trends</SubHeading>
-        <Description>
-          Challenge yourself with the most current questions across technology, pop culture, 
-          finance, and startup ecosystems. Stay sharp, stay informed!
-        </Description>
+        <HeroContent>
+          <WelcomeText>Welcome to the ultimate trivia challenge</WelcomeText>
+          <MainHeading>How Well Do You Know What's Trending?</MainHeading>
+          <SubHeading>Test Your Knowledge on Latest Trends</SubHeading>
+          <Description>
+            Challenge yourself with the most current questions across technology, pop culture, 
+            finance, and startup ecosystems. Stay sharp, stay informed!
+          </Description>
+        </HeroContent>
+        <HeroImage>
+          <CuriosityImage 
+            src="/HomePageImage.png"
+            alt="Curious person exploring knowledge and trends"
+            loading="lazy"
+          />
+        </HeroImage>
       </HeroSection>
 
       <TopicsSection className="reveal">
