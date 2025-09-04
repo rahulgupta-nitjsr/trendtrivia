@@ -50,8 +50,39 @@ async function generateQuestionsForTimeframe(timeframe) {
   console.log(`⏰ Started at: ${result.startTime}`);
 
   try {
-    // Use your existing function
-    const generationResult = await triggerLocalManualGenerationForTimeframe(timeframe.id);
+    // Optional dummy mode to avoid AI calls
+    const useDummy = process.env.USE_DUMMY_BATCH === '1';
+    let generationResult;
+    if (useDummy) {
+      console.log('🧪 Using dummy batch mode (no AI calls)');
+      const { saveBatch, activateBatchForTimeframe } = await import('./src/services/batchService-node.js');
+      const dummyBatchId = `dummy-${timeframe.id}-${Date.now()}`;
+      const dummyPayload = {
+        batchId: dummyBatchId,
+        timeframe: timeframe.id,
+        metadata: {
+          batchId: dummyBatchId,
+          timeframe: timeframe.id,
+          generatedAt: new Date().toISOString(),
+          status: 'generated',
+          questionCount: 0,
+          categories: ['Test'],
+          difficulties: ['easy']
+        },
+        questions: [],
+        rawResponse: 'DUMMY'
+      };
+      const saveRes = await saveBatch(dummyPayload);
+      if (!saveRes.success) throw new Error(`Dummy save failed: ${saveRes.error}`);
+      console.log('⏳ Waiting 2s before activation...');
+      await new Promise(r => setTimeout(r, 2000));
+      const actRes = await activateBatchForTimeframe(dummyBatchId, timeframe.id);
+      if (!actRes.success) throw new Error(`Dummy activation failed: ${actRes.error}`);
+      generationResult = { success: true, questionsGenerated: 0 };
+    } else {
+      // Use existing function (will call AI)
+      generationResult = await triggerLocalManualGenerationForTimeframe(timeframe.id);
+    }
     
     result.duration = Date.now() - startTime;
     result.endTime = getTimestamp();

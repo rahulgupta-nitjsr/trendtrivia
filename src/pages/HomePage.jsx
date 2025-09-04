@@ -327,9 +327,9 @@ function HomePage() {
         </HighScore>
         <Quote>
           <div className="quote-text">
-            "The only true wisdom is in knowing you know nothing"
+            "Stay curious, stay informed, stay ahead of the curve"
           </div>
-          <div className="quote-author">— Socrates</div>
+          <div className="quote-author">— TrendTrivia</div>
         </Quote>
       </StatsSection>
     </HomeContainer>

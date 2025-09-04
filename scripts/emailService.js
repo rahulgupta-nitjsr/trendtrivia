@@ -7,6 +7,7 @@
 
 import https from 'https';
 import fs from 'fs';
+import nodemailer from 'nodemailer';
 
 /**
  * Format question breakdown by topic and timeframe

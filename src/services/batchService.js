@@ -27,6 +27,12 @@ export const saveBatch = async (batchData) => {
     
     const batchRef = collection(db, 'batches');
     const batchDoc = {
+      // Ensure we persist identifiers used by activation queries
+      batchId: batchData.batchId,
+      timeframe: batchData.timeframe || batchData.metadata?.timeframe || 'unknown',
+      // Activation-related defaults
+      isActive: false,
+      status: batchData.metadata?.status || 'generated',
       ...batchData.metadata,
       questions: batchData.questions,
       rawResponse: batchData.rawResponse,
@@ -259,15 +265,42 @@ export const activateBatchForTimeframe = async (batchId, timeframe) => {
     await Promise.all(deactivatePromises);
     console.log(`✅ Deactivated ${deactivatePromises.length} existing batches for timeframe: ${timeframe}`);
     
-    // Now activate the target batch
-    const targetQuery = query(batchesRef, where('batchId', '==', batchId));
-    const targetSnapshot = await getDocs(targetQuery);
+    // Retry mechanism to find the batch (Firestore eventual consistency)
+    let targetDoc = null;
+    let retryCount = 0;
+    const maxRetries = 5; // Increased retries
+    const retryDelay = 2000; // Increased delay to 2 seconds
     
-    if (targetSnapshot.empty) {
-      throw new Error(`Batch ${batchId} not found`);
+    while (!targetDoc && retryCount < maxRetries) {
+      try {
+        // Now activate the target batch
+        const targetQuery = query(batchesRef, where('batchId', '==', batchId));
+        const targetSnapshot = await getDocs(targetQuery);
+        
+        if (!targetSnapshot.empty) {
+          targetDoc = targetSnapshot.docs[0];
+          console.log(`✅ Found batch ${batchId} on attempt ${retryCount + 1}`);
+          break;
+        }
+        
+        retryCount++;
+        if (retryCount < maxRetries) {
+          console.log(`⏳ Batch ${batchId} not found, retrying in ${retryDelay}ms (attempt ${retryCount}/${maxRetries})...`);
+          await new Promise(resolve => setTimeout(resolve, retryDelay));
+        }
+      } catch (queryError) {
+        console.warn(`⚠️ Query error on attempt ${retryCount + 1}:`, queryError.message);
+        retryCount++;
+        if (retryCount < maxRetries) {
+          await new Promise(resolve => setTimeout(resolve, retryDelay));
+        }
+      }
     }
     
-    const targetDoc = targetSnapshot.docs[0];
+    if (!targetDoc) {
+      throw new Error(`Batch ${batchId} not found after ${maxRetries} attempts`);
+    }
+    
     await updateDoc(targetDoc.ref, { 
       isActive: true, 
       updatedAt: new Date(),
@@ -280,7 +313,8 @@ export const activateBatchForTimeframe = async (batchId, timeframe) => {
       success: true,
       batchId,
       timeframe,
-      activatedAt: new Date().toISOString()
+      activatedAt: new Date().toISOString(),
+      retryCount
     };
     
   } catch (error) {

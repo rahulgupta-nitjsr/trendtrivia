@@ -16,12 +16,18 @@ const db = admin.firestore();
  * Configuration for AI generation
  */
 const AI_CONFIG = {
-  apiKey: functions.config().perplexity?.api_key || process.env.PERPLEXITY_API_KEY,
+  // Priority: Firebase-specific env var -> Firebase config -> general env var
+  apiKey: process.env.FIREBASE_PERPLEXITY_API_KEY || functions.config().perplexity?.api_key || process.env.PERPLEXITY_API_KEY,
   endpoint: 'https://api.perplexity.ai/chat/completions',
   model: 'sonar',
   maxTokens: 2000,
   temperature: 0.2
 };
+
+// Validate API key availability
+if (!AI_CONFIG.apiKey) {
+  console.error('❌ No Perplexity API key found. Please set FIREBASE_PERPLEXITY_API_KEY, functions.config().perplexity.api_key, or PERPLEXITY_API_KEY');
+}
 
 /**
  * Generate unique batch ID

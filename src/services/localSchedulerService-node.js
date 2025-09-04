@@ -218,6 +218,10 @@ export const executeLocalGenerationForTimeframe = async (timeframe, trigger = 'u
       const saveResult = await saveBatch(generationResult);
       
       if (saveResult.success) {
+        // Add a small delay to allow Firestore to propagate the write
+        console.log(`⏳ Waiting for Firestore write propagation...`);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
         // Activate the new batch for this timeframe
         console.log(`🔄 Activating new batch for timeframe: ${timeframe}...`);
         const activateResult = await activateBatchForTimeframe(generationResult.batchId, timeframe);

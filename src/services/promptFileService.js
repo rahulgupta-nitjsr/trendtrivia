@@ -14,6 +14,110 @@ const TIMEFRAME_PROMPTS = {
 };
 
 /**
+ * Calculate date ranges for timeframes
+ * @param {string} timeframe - The timeframe ('last_week', 'last_month', 'last_year')
+ * @returns {Object} Date range information
+ */
+export const calculateDateRange = (timeframe) => {
+  const today = new Date();
+  const todayFormatted = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+  
+  let startDate, endDate, daysBack, description;
+  
+  switch (timeframe) {
+    case 'last_week':
+      daysBack = 7;
+      startDate = new Date(today.getTime() - (7 * 24 * 60 * 60 * 1000));
+      endDate = today;
+      description = 'the last 7 days';
+      break;
+      
+    case 'last_month':
+      daysBack = 30;
+      startDate = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+      endDate = today;
+      description = 'the last 30 days';
+      break;
+      
+    case 'last_year':
+      daysBack = 365;
+      startDate = new Date(today.getTime() - (365 * 24 * 60 * 60 * 1000));
+      endDate = today;
+      description = 'the last 365 days';
+      break;
+      
+    default:
+      daysBack = 90; // Default to 3 months for recent trends
+      startDate = new Date(today.getTime() - (90 * 24 * 60 * 60 * 1000));
+      endDate = today;
+      description = 'recent trends and developments (last few months)';
+      break;
+  }
+  
+  return {
+    today: todayFormatted,
+    startDate: startDate.toISOString().split('T')[0],
+    endDate: endDate.toISOString().split('T')[0],
+    daysBack,
+    description,
+    timeframe
+  };
+};
+
+/**
+ * Inject dynamic date context into prompt
+ * @param {string} prompt - The original prompt content
+ * @param {string} timeframe - The timeframe
+ * @returns {string} Prompt with injected date context
+ */
+export const injectDateContext = (prompt, timeframe) => {
+  const dateRange = calculateDateRange(timeframe);
+  
+  // Create dynamic date context section
+  const dateContext = `
+### 📅 DYNAMIC TIME CONTEXT - INJECTED:
+- **Current Date**: ${dateRange.today}
+- **Target Period**: ${dateRange.description}
+- **Date Range**: From ${dateRange.startDate} to ${dateRange.endDate}
+- **Days Back**: ${dateRange.daysBack} days from today
+- **Search Instructions**: Use your real-time web search for events from ${dateRange.startDate} to ${dateRange.endDate}
+- **Date Verification**: Every question must reference events that occurred between ${dateRange.startDate} and ${dateRange.endDate}
+- **Exclusion Rule**: Do NOT include anything outside this date range
+
+`;
+
+  // Replace the static time context section with dynamic one
+  let enhancedPrompt = prompt;
+  
+  // Find and replace the time context section
+  const timeContextRegex = /### 📅 TIME CONTEXT.*?(?=## 🏷️|### 🏷️|## 🎯|### 🎯)/s;
+  if (timeContextRegex.test(enhancedPrompt)) {
+    enhancedPrompt = enhancedPrompt.replace(timeContextRegex, dateContext);
+  } else {
+    // If no time context section found, add it after the Perplexity instructions
+    const perplexityRegex = /## 🎯 PERPLEXITY AI SPECIFIC INSTRUCTIONS:.*?(?=## 🏷️|### 🏷️|## 🎯|### 🎯)/s;
+    if (perplexityRegex.test(enhancedPrompt)) {
+      enhancedPrompt = enhancedPrompt.replace(perplexityRegex, `$&${dateContext}`);
+    } else {
+      // Add at the beginning if no sections found
+      enhancedPrompt = dateContext + enhancedPrompt;
+    }
+  }
+  
+  // Also replace any remaining static date references
+  enhancedPrompt = enhancedPrompt
+    .replace(/LAST 7 DAYS ONLY/g, `LAST ${dateRange.daysBack} DAYS ONLY (${dateRange.startDate} to ${dateRange.endDate})`)
+    .replace(/last 7 days/g, `${dateRange.description} (${dateRange.startDate} to ${dateRange.endDate})`)
+    .replace(/last 30 days/g, `${dateRange.description} (${dateRange.startDate} to ${dateRange.endDate})`)
+    .replace(/last 365 days/g, `${dateRange.description} (${dateRange.startDate} to ${dateRange.endDate})`)
+    .replace(/this week/g, `the period from ${dateRange.startDate} to ${dateRange.endDate}`)
+    .replace(/this month/g, `the period from ${dateRange.startDate} to ${dateRange.endDate}`)
+    .replace(/this year/g, `the period from ${dateRange.startDate} to ${dateRange.endDate}`);
+  
+  return enhancedPrompt;
+};
+
+/**
  * Get valid timeframes
  * @returns {Array<string>} List of valid timeframes
  */
@@ -53,7 +157,11 @@ export const readPromptFromFile = async (timeframe = 'default') => {
     console.log(`📝 Prompt length: ${promptContent.length} characters`);
     console.log(`🕒 Timeframe: ${timeframe}`);
     
-    return promptContent.trim();
+    // Inject dynamic date context
+    const enhancedPrompt = injectDateContext(promptContent, timeframe);
+    console.log(`📅 Injected dynamic date context for ${timeframe}`);
+    
+    return enhancedPrompt.trim();
     
   } catch (error) {
     console.error('❌ Error reading prompt file:', error);
@@ -186,55 +294,8 @@ export const getValidatedPrompt = async (timeframe = 'default') => {
     }
     
     return prompt;
-    
   } catch (error) {
-    console.error('❌ Error getting validated prompt:', error);
+    console.error('Error getting validated prompt:', error);
     throw error;
   }
 };
-
-/**
- * Get validated prompt content for specific timeframe (alias for backward compatibility)
- * @param {string} timeframe - The timeframe ('last_week', 'last_month', 'last_year')
- * @returns {Promise<string>} Validated prompt content
- */
-export const getValidatedPromptByTimeframe = async (timeframe) => {
-  return await getValidatedPrompt(timeframe);
-};
-
-/**
- * Test the prompt file reading system
- * @returns {Promise<Object>} Test results
- */
-export const testPromptFileReading = async () => {
-  try {
-    console.log('🧪 Testing prompt file reading system...');
-    
-    const startTime = Date.now();
-    const prompt = await getValidatedPrompt();
-    const endTime = Date.now();
-    
-    const result = {
-      success: true,
-      message: 'Prompt file reading test successful!',
-      promptLength: prompt.length,
-      readTime: `${endTime - startTime}ms`,
-      containsRequiredTopics: ['Technology', 'Pop Culture', 'Finance', 'Start-Ups'].every(topic =>
-        prompt.includes(topic)
-      )
-    };
-    
-    console.log('✅ Prompt file reading test completed:', result);
-    return result;
-    
-  } catch (error) {
-    const result = {
-      success: false,
-      message: error.message,
-      error: error
-    };
-    
-    console.error('❌ Prompt file reading test failed:', result);
-    return result;
-  }
-}; 

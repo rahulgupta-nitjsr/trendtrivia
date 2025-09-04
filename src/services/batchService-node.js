@@ -39,6 +39,12 @@ export const saveBatch = async (batchData) => {
     }
     
     const batchDoc = {
+      // Ensure we persist identifiers used by activation queries
+      batchId: batchData.batchId,
+      timeframe: batchData.timeframe || cleanMetadata.timeframe || 'unknown',
+      // Activation-related defaults
+      isActive: false,
+      status: cleanMetadata.status || 'generated',
       ...cleanMetadata,
       questions: batchData.questions || [],
       rawResponse: batchData.rawResponse || null,
@@ -247,16 +253,41 @@ export const activateBatchForTimeframe = async (batchId, timeframe) => {
     await Promise.all(deactivatePromises);
     console.log(`✅ Deactivated ${activeSnapshot.docs.length} other batches for timeframe: ${timeframe}`);
     
-    // Find the batch document by batchId (not document ID)
-    const batchQuery = query(batchesRef, where('batchId', '==', batchId));
-    const batchSnapshot = await getDocs(batchQuery);
+    // Retry mechanism to find the batch (Firestore eventual consistency)
+    let batchDoc = null;
+    let retryCount = 0;
+    const maxRetries = 5; // Increased retries
+    const retryDelay = 2000; // Increased delay to 2 seconds
     
-    if (batchSnapshot.empty) {
-      throw new Error(`Batch ${batchId} not found in Firestore`);
+    while (!batchDoc && retryCount < maxRetries) {
+      try {
+        // Find the batch document by batchId (not document ID)
+        const batchQuery = query(batchesRef, where('batchId', '==', batchId));
+        const batchSnapshot = await getDocs(batchQuery);
+        
+        if (!batchSnapshot.empty) {
+          batchDoc = batchSnapshot.docs[0];
+          console.log(`✅ Found batch ${batchId} on attempt ${retryCount + 1}`);
+          break;
+        }
+        
+        retryCount++;
+        if (retryCount < maxRetries) {
+          console.log(`⏳ Batch ${batchId} not found, retrying in ${retryDelay}ms (attempt ${retryCount}/${maxRetries})...`);
+          await new Promise(resolve => setTimeout(resolve, retryDelay));
+        }
+      } catch (queryError) {
+        console.warn(`⚠️ Query error on attempt ${retryCount + 1}:`, queryError.message);
+        retryCount++;
+        if (retryCount < maxRetries) {
+          await new Promise(resolve => setTimeout(resolve, retryDelay));
+        }
+      }
     }
     
-    // Get the first matching document
-    const batchDoc = batchSnapshot.docs[0];
+    if (!batchDoc) {
+      throw new Error(`Batch ${batchId} not found in Firestore after ${maxRetries} attempts`);
+    }
     
     // Now activate the specified batch using the correct document ID
     await updateDoc(batchDoc.ref, { 
@@ -272,7 +303,8 @@ export const activateBatchForTimeframe = async (batchId, timeframe) => {
       success: true,
       batchId,
       timeframe,
-      deactivatedCount: activeSnapshot.docs.length
+      deactivatedCount: activeSnapshot.docs.length,
+      retryCount
     };
     
   } catch (error) {
@@ -415,6 +447,93 @@ export const getBatchStats = async () => {
 /**
  * Test batch management functionality
  */
+/**
+ * Archive old batches older than specified weeks
+ */
+export const archiveOldBatches = async (weeksOld = 4) => {
+  try {
+    console.log(`🗄️ Archiving batches older than ${weeksOld} weeks...`);
+    
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - (weeksOld * 7));
+    
+    const batchesRef = collection(db, 'batches');
+    const oldBatchesQuery = query(
+      batchesRef,
+      where('createdAt', '<', cutoffDate),
+      where('isActive', '==', false)
+    );
+    
+    const snapshot = await getDocs(oldBatchesQuery);
+    let archivedCount = 0;
+    
+    for (const docSnapshot of snapshot.docs) {
+      try {
+        await updateDoc(docSnapshot.ref, {
+          archived: true,
+          archivedAt: new Date(),
+          updatedAt: new Date()
+        });
+        archivedCount++;
+      } catch (error) {
+        console.error(`Failed to archive batch ${docSnapshot.id}:`, error);
+      }
+    }
+    
+    console.log(`✅ Archived ${archivedCount} old batches`);
+    return {
+      success: true,
+      archivedCount,
+      cutoffDate
+    };
+    
+  } catch (error) {
+    console.error('❌ Archive operation failed:', error);
+    return {
+      success: false,
+      error: error.message,
+      archivedCount: 0
+    };
+  }
+};
+
+/**
+ * Initialize Firebase for Node.js environment
+ */
+export const initializeFirebaseNode = async () => {
+  try {
+    // Firebase is already initialized in firebase-node.js
+    // Just verify the connection
+    const testQuery = query(collection(db, 'batches'), limit(1));
+    await getDocs(testQuery);
+    console.log('✅ Firebase Node.js connection verified');
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Firebase Node.js initialization failed:', error);
+    throw error;
+  }
+};
+
+/**
+ * Store questions in a batch (alias for saveBatch for compatibility)
+ */
+export const storeQuestionsInBatch = async (questions, timeframe, metadata = {}) => {
+  const batchData = {
+    batchId: `batch-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+    timeframe,
+    questions,
+    metadata: {
+      ...metadata,
+      timeframe,
+      questionCount: questions.length,
+      createdAt: new Date()
+    }
+  };
+  
+  const result = await saveBatch(batchData);
+  return result.success ? batchData.batchId : null;
+};
+
 export const testBatchManagement = async () => {
   try {
     console.log('🧪 Testing batch management functionality...');

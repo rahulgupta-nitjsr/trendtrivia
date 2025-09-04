@@ -52,7 +52,7 @@ function log(message) {
 
 function logError(message, error) {
   const timestamp = new Date().toISOString();
-  const errorMessage = `[${timestamp}] ERROR: ${message}`;
+  let errorMessage = `[${timestamp}] ERROR: ${message}`;
   if (error) {
     errorMessage += `\n${error.stack || error.message || error}`;
   }
@@ -172,6 +172,8 @@ async function runWeeklyGeneration() {
   log('🚀 Starting Weekly AI Question Generation');
   log(`📋 Configuration: ${JSON.stringify(CONFIG, null, 2)}`);
   
+  let results = []; // Declare results outside try block for error handling access
+  
   try {
     // Initialize Firebase
     log('🔥 Initializing Firebase...');
@@ -179,7 +181,6 @@ async function runWeeklyGeneration() {
     log('✅ Firebase initialized successfully');
     
     // Generate questions for all timeframes
-    const results = [];
     
     for (const timeframe of CONFIG.timeframes) {
       const result = await generateWithRetry(timeframe);
@@ -196,7 +197,7 @@ async function runWeeklyGeneration() {
     log(`📊 Generation Analysis: ${JSON.stringify(analysis, null, 2)}`);
     
     // Determine overall success
-    const minSuccessfulTimeframes = 2; // At least 2 out of 3 timeframes must succeed
+    const minSuccessfulTimeframes = Math.min(2, CONFIG.timeframes.length); // At least 2 out of 3 timeframes, or all if less than 2
     const isSuccess = analysis.successfulTimeframes >= minSuccessfulTimeframes;
     
     if (!isSuccess) {
@@ -283,7 +284,7 @@ async function runWeeklyGeneration() {
         recipient: CONFIG.emailRecipient,
         success: false,
         error: error.message,
-        results: results || [],
+        results: results, // results is now accessible from outer scope
         duration,
         triggerSource: CONFIG.triggerSource,
         logFile

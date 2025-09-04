@@ -179,33 +179,49 @@ const ScorePage = () => {
   const [highScore, setHighScore] = useState(0);
   const [isNewHighScore, setIsNewHighScore] = useState(false);
 
-  // Mock performance data - in a real app, this would come from the quiz results
-  const performanceData = [
-    { category: 'Technology', correct: 4, total: 5 },
-    { category: 'Finance', correct: 3, total: 5 },
-    { category: 'Entertainment', correct: 2, total: 5 },
-    { category: 'General', correct: 1, total: 5 },
-  ];
+  // Get quiz data from navigation state
+  const quizData = location.state || {};
+  const answers = quizData.answers || [];
+  const topic = quizData.topic || 'Quiz';
+  
+  // Simple calculations - exactly what the user wants
+  const totalQuestions = answers.length;
+  const correctAnswers = answers.filter(answer => answer.isCorrect).length;
+  const finalScore = answers.reduce((sum, answer) => sum + (answer.points || 0), 0);
+  const totalAchievableScore = answers.reduce((sum, answer) => {
+    const difficulty = answer.difficulty || 'Medium';
+    const maxPoints = difficulty === 'Easy' ? 1 : difficulty === 'Medium' ? 2 : 3;
+    return sum + maxPoints;
+  }, 0);
+
+  // Debug logging to verify new version is loading
+  console.log('🔍 ScorePage - NEW VERSION LOADED:', {
+    totalQuestions,
+    correctAnswers,
+    finalScore,
+    totalAchievableScore,
+    topic,
+    answers
+  });
 
   useEffect(() => {
-    // Get the score from navigation state or localStorage as fallback
-    const score = location.state?.score || 0;
-    setCurrentScore(score);
+    // Use the calculated final score
+    setCurrentScore(finalScore);
 
     // Get current high score
     const storedHighScore = localStorage.getItem('trendtrivia-highscore');
     const currentHighScore = storedHighScore ? parseInt(storedHighScore) : 0;
 
     // Check if this is a new high score
-    if (score > currentHighScore) {
-      localStorage.setItem('trendtrivia-highscore', score.toString());
-      setHighScore(score);
+    if (finalScore > currentHighScore) {
+      localStorage.setItem('trendtrivia-highscore', finalScore.toString());
+      setHighScore(finalScore);
       setIsNewHighScore(true);
     } else {
       setHighScore(currentHighScore);
       setIsNewHighScore(false);
     }
-  }, [location.state]);
+  }, [finalScore]);
 
   const handlePlayAgain = () => {
     navigate('/');
@@ -219,8 +235,25 @@ const ScorePage = () => {
     navigate('/');
   };
 
-  const totalQuestions = 5; // Based on our quiz data
-  const correctAnswers = currentScore;
+  // Handle case where no quiz data is available
+  if (totalQuestions === 0) {
+    return (
+      <ScoreContainer>
+        <HomeButton onClick={handleHomeClick}>Home</HomeButton>
+        <ScoreCard>
+          <ScoreHeading>No Quiz Data Available</ScoreHeading>
+          <p style={{ color: '#ef4444', textAlign: 'center' }}>
+            Sorry, we couldn't find your quiz results. Please try taking the quiz again.
+          </p>
+          <ButtonContainer>
+            <PlayAgainButton onClick={handlePlayAgain}>
+              Take Quiz
+            </PlayAgainButton>
+          </ButtonContainer>
+        </ScoreCard>
+      </ScoreContainer>
+    );
+  }
 
   return (
     <ScoreContainer>
@@ -228,37 +261,26 @@ const ScorePage = () => {
       
       <ScoreCard>
         <ScoreHeading>
-          {isNewHighScore ? 'NEW HIGH SCORE!' : 'Game Over!'}
+          {isNewHighScore ? 'NEW HIGH SCORE!' : 'Quiz Complete!'}
         </ScoreHeading>
         
-        <ScoreStatsContainer>
-          <ScoreStat>
-            <StatValue>{currentScore * 10}</StatValue>
-            <StatLabel>Final Score</StatLabel>
-          </ScoreStat>
-          <ScoreStat>
-            <StatValue>{correctAnswers}/{totalQuestions}</StatValue>
-            <StatLabel>Correct Answers</StatLabel>
-          </ScoreStat>
-        </ScoreStatsContainer>
-
-        <PerformanceSection>
-          <SectionTitle>Performance by Topic</SectionTitle>
-          {performanceData.map((item, index) => {
-            const percentage = (item.correct / item.total) * 100;
-            return (
-              <PerformanceItem key={index}>
-                <PerformanceHeader>
-                  <CategoryName>{item.category}</CategoryName>
-                </PerformanceHeader>
-                <ProgressBarContainer>
-                  <ProgressBar style={{ width: `${percentage}%` }} />
-                </ProgressBarContainer>
-                <CategoryScore>{item.correct}/{item.total}</CategoryScore>
-              </PerformanceItem>
-            );
-          })}
-        </PerformanceSection>
+        {/* Simple Score Display - Exactly what user requested */}
+        <div style={{ 
+          textAlign: 'left', 
+          fontSize: '18px', 
+          lineHeight: '2',
+          color: '#ffffff',
+          background: 'rgba(255, 255, 255, 0.05)',
+          padding: '30px',
+          borderRadius: '12px',
+          border: '1px solid rgba(255, 255, 255, 0.1)'
+        }}>
+          <div><strong>Topic:</strong> {topic}</div>
+          <div><strong>Total Questions:</strong> {totalQuestions}</div>
+          <div><strong>Questions Correct:</strong> {correctAnswers}</div>
+          <div><strong>Your Final Score:</strong> {finalScore}</div>
+          <div><strong>Total Achievable Score:</strong> {totalAchievableScore}</div>
+        </div>
 
         <ButtonContainer>
           <PlayAgainButton onClick={handlePlayAgain}>

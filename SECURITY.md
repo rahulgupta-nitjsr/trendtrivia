@@ -86,9 +86,12 @@ service cloud.firestore {
 ### **Environment Variable Best Practices**
 
 1. **Use different keys for development and production**
-2. **Rotate keys regularly**
-3. **Monitor usage to detect unauthorized access**
-4. **Never share keys in chat, email, or screenshots**
+2. **Use Firebase-specific environment variables for cloud functions:**
+   - `FIREBASE_PERPLEXITY_API_KEY` (highest priority for Firebase Functions)
+   - `PERPLEXITY_API_KEY` (general fallback)
+3. **Rotate keys regularly**
+4. **Monitor usage to detect unauthorized access**
+5. **Never share keys in chat, email, or screenshots**
 
 ## 🆘 If You Accidentally Commit API Keys
 

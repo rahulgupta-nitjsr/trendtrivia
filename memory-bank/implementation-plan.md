@@ -1,7 +1,7 @@
 # TrendTrivia Implementation Plan
 
-Version: 4.0  
-Last Updated: July 22, 2025
+Version: 4.1  
+Last Updated: January 22, 2025
 
 This document breaks down the development of TrendTrivia into actionable steps, guided by the PRD and backend architecture.
 
@@ -16,11 +16,16 @@ This document breaks down the development of TrendTrivia into actionable steps, 
 ## **Phase II: Dynamic AI-Driven Content & Backend Migration (CURRENT)**
 
 ### **Phase 1: Backend & Data Pipeline**
-* [ ] Set up NoSQL database (Firestore/MongoDB) for flexible question storage
-* [ ] Design and implement question schema with support for versioning and optional fields
-* [ ] Build backend service for AI prompt management and API calls (OpenAI/Perplexity)
-* [ ] Implement scheduler for weekly (or manual) content refresh
-* [ ] Store all prompts, responses, and batch metadata for traceability
+* [✅] Set up NoSQL database (Firestore/MongoDB) for flexible question storage
+* [✅] Design and implement question schema with support for versioning and optional fields
+* [✅] Build backend service for AI prompt management and API calls (OpenAI/Perplexity)
+* [✅] Implement scheduler for weekly (or manual) content refresh
+* [✅] Store all prompts, responses, and batch metadata for traceability
+* **[✅] Enhanced AI Prompts** - Comprehensive optimization of all prompts for Perplexity AI with:
+  - Strict topic boundaries (Technology, Pop Culture, Finance, Start-Ups)
+  - Time period enforcement (Last Week, Last Month, Last Year, Default)
+  - Quality standards and validation processes
+  - Perplexity AI-specific instructions for real-time search
 
 ### **Phase 2: Validation & Moderation Pipeline**
 * [ ] Implement automated validation: field presence, answer validity, profanity/NSFW, deduplication, length checks

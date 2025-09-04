@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getQuizQuestions } from '../services/firestoreService';
+import { db } from '../config/firebase.js';
 
 function QuizPageSimple() {
   const navigate = useNavigate();
@@ -52,6 +53,7 @@ function QuizPageSimple() {
     
     try {
       console.log('🔍 About to call getQuizQuestions...');
+      console.log('🔧 Firebase db status:', !!db);
       const result = await getQuizQuestions({ 
         count: 10, 
         category: category,
@@ -74,38 +76,126 @@ function QuizPageSimple() {
           questionsLength: result.questions?.length || 0,
           result: result
         });
-        // Fallback questions
-        const fallbackQuestions = [
-          {
-            id: 1,
-            question: "What does 'AI' stand for?",
-            options: ["Artificial Intelligence", "Automated Internet", "Advanced Interface", "Applied Innovation"],
-            correct: "Artificial Intelligence",
-            answer: "Artificial Intelligence",
-            difficulty: "Easy",
-            category: "technology"
-          },
-          {
-            id: 2,
-            question: "Which company developed the React framework?",
-            options: ["Google", "Facebook", "Microsoft", "Apple"],
-            correct: "Facebook",
-            answer: "Facebook",
-            difficulty: "Medium",
-            category: "technology"
-          },
-          {
-            id: 3,
-            question: "What does 'HTTP' stand for?",
-            options: ["HyperText Transfer Protocol", "High Tech Transfer Process", "Home Tool Transfer Program", "Host Text Transfer Protocol"],
-            correct: "HyperText Transfer Protocol",
-            answer: "HyperText Transfer Protocol",
-            difficulty: "Easy",
-            category: "technology"
+        // Use comprehensive fallback system for 10 questions
+        console.log('⚠️ Firebase failed, using comprehensive fallback system...');
+        try {
+          const { getComprehensiveFallbackQuestions } = await import('../services/comprehensiveFallbackService.js');
+          
+          // Map category to topic format
+          const topicMap = {
+            'technology': 'Technology',
+            'pop-culture': 'Pop Culture', 
+            'finance': 'Finance',
+            'startups': 'Start-Ups'
+          };
+          
+          const fallbackTopic = topicMap[category] || 'Technology';
+          const fallbackResult = await getComprehensiveFallbackQuestions(fallbackTopic, timeframe, 10);
+          
+          if (fallbackResult.success && fallbackResult.questions.length > 0) {
+            setQuestions(fallbackResult.questions);
+            console.log(`✅ Using ${fallbackResult.questions.length} comprehensive fallback questions for ${fallbackTopic} - ${timeframe}`);
+          } else {
+            throw new Error('Comprehensive fallback failed');
           }
-        ];
-        setQuestions(fallbackQuestions);
-        console.log('⚠️ Using fallback questions');
+        } catch (fallbackError) {
+          console.error('❌ Comprehensive fallback failed:', fallbackError);
+          // Emergency hardcoded questions - at least 10
+          const emergencyQuestions = [
+            {
+              id: 1,
+              question: "What does 'AI' stand for?",
+              options: ["Artificial Intelligence", "Automated Internet", "Advanced Interface", "Applied Innovation"],
+              correct: "Artificial Intelligence",
+              answer: "Artificial Intelligence",
+              difficulty: "Easy",
+              category: topic.toLowerCase()
+            },
+            {
+              id: 2,
+              question: "Which company developed the React framework?",
+              options: ["Google", "Facebook", "Microsoft", "Apple"],
+              correct: "Facebook",
+              answer: "Facebook",
+              difficulty: "Medium",
+              category: topic.toLowerCase()
+            },
+            {
+              id: 3,
+              question: "What does 'HTTP' stand for?",
+              options: ["HyperText Transfer Protocol", "High Tech Transfer Process", "Home Tool Transfer Program", "Host Text Transfer Protocol"],
+              correct: "HyperText Transfer Protocol",
+              answer: "HyperText Transfer Protocol",
+              difficulty: "Easy",
+              category: topic.toLowerCase()
+            },
+            {
+              id: 4,
+              question: "What is the primary programming language for web browsers?",
+              options: ["Python", "JavaScript", "Java", "C++"],
+              correct: "JavaScript",
+              answer: "JavaScript",
+              difficulty: "Easy",
+              category: topic.toLowerCase()
+            },
+            {
+              id: 5,
+              question: "Which company created the iPhone?",
+              options: ["Samsung", "Google", "Apple", "Microsoft"],
+              correct: "Apple",
+              answer: "Apple",
+              difficulty: "Easy",
+              category: topic.toLowerCase()
+            },
+            {
+              id: 6,
+              question: "What does 'URL' stand for?",
+              options: ["Universal Resource Locator", "Uniform Resource Locator", "Universal Reference Link", "Uniform Reference Locator"],
+              correct: "Uniform Resource Locator",
+              answer: "Uniform Resource Locator",
+              difficulty: "Medium",
+              category: topic.toLowerCase()
+            },
+            {
+              id: 7,
+              question: "Which programming language is known for 'Write Once, Run Anywhere'?",
+              options: ["Python", "C++", "Java", "JavaScript"],
+              correct: "Java",
+              answer: "Java",
+              difficulty: "Medium",
+              category: topic.toLowerCase()
+            },
+            {
+              id: 8,
+              question: "What is the latest version of HTML?",
+              options: ["HTML4", "HTML5", "HTML6", "XHTML"],
+              correct: "HTML5",
+              answer: "HTML5",
+              difficulty: "Easy",
+              category: topic.toLowerCase()
+            },
+            {
+              id: 9,
+              question: "Which company owns YouTube?",
+              options: ["Facebook", "Google", "Microsoft", "Amazon"],
+              correct: "Google",
+              answer: "Google",
+              difficulty: "Easy",
+              category: topic.toLowerCase()
+            },
+            {
+              id: 10,
+              question: "What does 'CSS' stand for?",
+              options: ["Computer Style Sheets", "Cascading Style Sheets", "Creative Style Sheets", "Colorful Style Sheets"],
+              correct: "Cascading Style Sheets",
+              answer: "Cascading Style Sheets",
+              difficulty: "Easy",
+              category: topic.toLowerCase()
+            }
+          ];
+          setQuestions(emergencyQuestions);
+          console.log('⚠️ Using emergency 10-question fallback');
+        }
       }
     } catch (error) {
       console.error('❌ Error loading questions:', error);
@@ -114,19 +204,43 @@ function QuizPageSimple() {
         stack: error.stack,
         name: error.name
       });
-      // Use fallback on error
-      const fallbackQuestions = [
-        {
-          id: 1,
-          question: "What does 'AI' stand for?",
-          options: ["Artificial Intelligence", "Automated Internet", "Advanced Interface", "Applied Innovation"],
-          correct: "Artificial Intelligence",
-          answer: "Artificial Intelligence",
-          difficulty: "Easy",
-          category: "technology"
+      // Use comprehensive fallback system on error
+      console.log('⚠️ Exception occurred, using comprehensive fallback system...');
+      try {
+        const { getComprehensiveFallbackQuestions } = await import('../services/comprehensiveFallbackService.js');
+        
+        // Map category to topic format
+        const topicMap = {
+          'technology': 'Technology',
+          'pop-culture': 'Pop Culture', 
+          'finance': 'Finance',
+          'startups': 'Start-Ups'
+        };
+        
+        const fallbackTopic = topicMap[category] || 'Technology';
+        const fallbackResult = await getComprehensiveFallbackQuestions(fallbackTopic, timeframe, 10);
+        
+        if (fallbackResult.success && fallbackResult.questions.length > 0) {
+          setQuestions(fallbackResult.questions);
+          console.log(`✅ Using ${fallbackResult.questions.length} comprehensive fallback questions for ${fallbackTopic} - ${timeframe}`);
+        } else {
+          throw new Error('Comprehensive fallback failed in catch block');
         }
-      ];
-      setQuestions(fallbackQuestions);
+      } catch (fallbackError) {
+        console.error('❌ Comprehensive fallback failed in catch:', fallbackError);
+        // Final emergency fallback - 10 questions
+        const emergencyQuestions = Array.from({length: 10}, (_, i) => ({
+          id: i + 1,
+          question: `Sample Question ${i + 1}: What is a common technology concept?`,
+          options: ["Option A", "Option B", "Option C", "Option D"],
+          correct: "Option A",
+          answer: "Option A",
+          difficulty: "Easy",
+          category: topic.toLowerCase()
+        }));
+        setQuestions(emergencyQuestions);
+        console.log('⚠️ Using final emergency 10-question fallback');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -168,6 +282,7 @@ function QuizPageSimple() {
       correctAnswer: correctAnswer,
       isCorrect,
       difficulty: currentQuestion.difficulty,
+      category: currentQuestion.category || topic,
       points
     }]);
 
@@ -189,6 +304,7 @@ function QuizPageSimple() {
             correctAnswer: correctAnswer,
             isCorrect,
             difficulty: currentQuestion.difficulty,
+            category: currentQuestion.category || topic,
             points
           }],
           topic,

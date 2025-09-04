@@ -1,0 +1,168 @@
+[2025-08-13T08:17:48.248Z] 🚀 Starting Weekly AI Question Generation
+[2025-08-13T08:17:48.249Z] 📋 Configuration: {
+  "timeframes": [
+    "last_week"
+  ],
+  "forceRegenerate": true,
+  "triggerSource": "manual",
+  "emailRecipient": "rahulgupta.nitjsr@gmail.com",
+  "minQuestionsPerTimeframe": 30,
+  "maxRetries": 1,
+  "retryDelayMs": 120000,
+  "archiveAfterWeeks": 4
+}
+[2025-08-13T08:17:48.250Z] 🔥 Initializing Firebase...
+[2025-08-13T08:17:48.681Z] ✅ Firebase initialized successfully
+[2025-08-13T08:17:48.683Z] 🚀 Generating questions for last_week (attempt 1/2)
+[2025-08-13T08:18:51.322Z] ✅ Successfully generated 36 questions for last_week
+[2025-08-13T08:18:51.324Z] 📊 Generation Analysis: {
+  "totalQuestions": 36,
+  "byTimeframe": {
+    "undefined": 36
+  },
+  "byTopic": {
+    "Technology": {
+      "total": 10,
+      "byTimeframe": {
+        "undefined": 10
+      }
+    },
+    "Pop Culture": {
+      "total": 9,
+      "byTimeframe": {
+        "undefined": 9
+      }
+    },
+    "Finance": {
+      "total": 8,
+      "byTimeframe": {
+        "undefined": 8
+      }
+    },
+    "Start-Ups": {
+      "total": 9,
+      "byTimeframe": {
+        "undefined": 9
+      }
+    }
+  },
+  "successfulTimeframes": 1,
+  "failedTimeframes": []
+}
+[2025-08-13T08:22:31.784Z] 🚀 Starting Weekly AI Question Generation
+[2025-08-13T08:22:31.784Z] 📋 Configuration: {
+  "timeframes": [
+    "last_week"
+  ],
+  "forceRegenerate": true,
+  "triggerSource": "manual",
+  "emailRecipient": "rahulgupta.nitjsr@gmail.com",
+  "minQuestionsPerTimeframe": 30,
+  "maxRetries": 1,
+  "retryDelayMs": 120000,
+  "archiveAfterWeeks": 4
+}
+[2025-08-13T08:22:31.785Z] 🔥 Initializing Firebase...
+[2025-08-13T08:22:32.303Z] ✅ Firebase initialized successfully
+[2025-08-13T08:22:32.304Z] 🚀 Generating questions for last_week (attempt 1/2)
+[2025-08-13T08:24:15.662Z] ✅ Successfully generated 40 questions for last_week
+[2025-08-13T08:24:15.667Z] 📊 Generation Analysis: {
+  "totalQuestions": 40,
+  "byTimeframe": {
+    "undefined": 40
+  },
+  "byTopic": {
+    "Technology": {
+      "total": 10,
+      "byTimeframe": {
+        "undefined": 10
+      }
+    },
+    "Pop Culture": {
+      "total": 10,
+      "byTimeframe": {
+        "undefined": 10
+      }
+    },
+    "Finance": {
+      "total": 10,
+      "byTimeframe": {
+        "undefined": 10
+      }
+    },
+    "Start-Ups": {
+      "total": 10,
+      "byTimeframe": {
+        "undefined": 10
+      }
+    }
+  },
+  "successfulTimeframes": 1,
+  "failedTimeframes": []
+}
+[2025-08-13T08:24:15.675Z] ERROR: Weekly generation failed
+Error: Insufficient successful generations: 1/1 timeframes succeeded (minimum 2 required)
+    at Module.runWeeklyGeneration (file:///D:/AIProjects/CursorProjects/TrendTrivia/scripts/generate-weekly-questions.js:203:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[2025-08-13T08:24:15.683Z] ERROR: Failed to send failure notification
+ReferenceError: results is not defined
+    at Module.runWeeklyGeneration (file:///D:/AIProjects/CursorProjects/TrendTrivia/scripts/generate-weekly-questions.js:286:18)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[2025-08-13T08:25:08.269Z] 🚀 Starting Weekly AI Question Generation
+[2025-08-13T08:25:08.270Z] 📋 Configuration: {
+  "timeframes": [
+    "last_week"
+  ],
+  "forceRegenerate": true,
+  "triggerSource": "manual",
+  "emailRecipient": "rahulgupta.nitjsr@gmail.com",
+  "minQuestionsPerTimeframe": 30,
+  "maxRetries": 1,
+  "retryDelayMs": 120000,
+  "archiveAfterWeeks": 4
+}
+[2025-08-13T08:25:08.271Z] 🔥 Initializing Firebase...
+[2025-08-13T08:25:08.648Z] ✅ Firebase initialized successfully
+[2025-08-13T08:25:08.650Z] 🚀 Generating questions for last_week (attempt 1/2)
+[2025-08-13T08:25:51.542Z] ✅ Successfully generated 41 questions for last_week
+[2025-08-13T08:25:51.545Z] 📊 Generation Analysis: {
+  "totalQuestions": 41,
+  "byTimeframe": {
+    "undefined": 41
+  },
+  "byTopic": {
+    "Technology": {
+      "total": 10,
+      "byTimeframe": {
+        "undefined": 10
+      }
+    },
+    "Pop Culture": {
+      "total": 10,
+      "byTimeframe": {
+        "undefined": 10
+      }
+    },
+    "Finance": {
+      "total": 10,
+      "byTimeframe": {
+        "undefined": 10
+      }
+    },
+    "Start-Ups": {
+      "total": 11,
+      "byTimeframe": {
+        "undefined": 11
+      }
+    }
+  },
+  "successfulTimeframes": 1,
+  "failedTimeframes": []
+}
+[2025-08-13T08:25:51.551Z] 💾 Storing 41 questions for undefined...
+[2025-08-13T08:25:51.740Z] ✅ Stored batch batch-1755073551555-eq3kop for undefined
+[2025-08-13T08:25:52.290Z] 🟢 Activated batch batch-1755073551555-eq3kop for undefined
+[2025-08-13T08:25:52.292Z] 🗄️ Archiving old batches...
+[2025-08-13T08:25:52.436Z] ✅ Archived 0 old batches
+[2025-08-13T08:25:52.801Z] 🎉 Weekly generation completed successfully in 44.2 seconds
+[2025-08-13T08:25:52.807Z] 📊 Final Summary: 41 questions generated across 1 timeframes
